@@ -6,7 +6,8 @@ import { challengeProgress, challenges, userProgress } from "@/db/schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
+import { redirect } from "next/navigation";
+const POINTS = 500
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth();
   const user = await currentUser();
@@ -26,6 +27,7 @@ export const upsertUserProgress = async (courseId: number) => {
     });
     revalidatePath("/courses");
     revalidatePath("/learn");
+    redirect("/learn");
   }
   await db.insert(userProgress).values({
     userId,
@@ -35,6 +37,7 @@ export const upsertUserProgress = async (courseId: number) => {
   });
   revalidatePath("/courses");
   revalidatePath("/learn");
+  redirect("/learn");
 };
 export const reduceHearts = async (challengeId: number) => {
   const { userId } = await auth();
@@ -75,3 +78,29 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath("/shop")
   revalidatePath(`/lesson/${lessonId}`)
 };
+export const refillHearts = async() => {
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress){
+    throw new Error("User progress not found")
+  }
+  if (currentUserProgress.hearts === 5) {
+    throw new Error("Hearts are already full")
+  }
+  if (currentUserProgress.points < POINTS){
+    throw new Error("Not enough points")
+  }
+  await db.update(userProgress).set({
+    hearts: 5,
+    points: currentUserProgress.points - POINTS,
+  }).where(eq(userProgress.userId, currentUserProgress.userId))
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+  revalidatePath("/quests")
+  revalidatePath("/leaderboard")
+}
+//todo: set price to a variable in db
+//add more courses
+//set hearts as a column to user
+//add a normal learning module
+//add more to the story
+//cms for this shit

@@ -1,10 +1,12 @@
-import ExitModal from '@/components/ui/exit-modal';
+import ExitModal from '@/components/modals/exit-modal';
 import './globals.css';
 import { Button } from "@/components/ui/button";
 import { ClerkLoaded, ClerkLoading, ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Home, Loader, Menu, ShoppingCart, Sword, Trophy } from "lucide-react";
 import Link from 'next/link';
 import { Toaster } from "@/components/ui/sonner"
+import HeartsModal from '@/components/modals/hearts-modal';
+import PracticeModal from '@/components/modals/practice-modal';
 export default function RootLayout({
   children,
 }: {
@@ -55,7 +57,9 @@ export default function RootLayout({
               
               <main className="flex container flex-col">
               <Toaster />
-                <ExitModal></ExitModal>
+                <ExitModal/>
+                <HeartsModal/>
+                <PracticeModal/>
                 {children}
               </main>
 

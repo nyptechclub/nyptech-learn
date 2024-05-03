@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, integer, serial, pgEnum, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, integer, serial, pgEnum, boolean, timestamp} from "drizzle-orm/pg-core";
 
 export const courses = pgTable("courses",{
     id: serial("id").primaryKey(),
@@ -45,7 +45,8 @@ export const userProgress = pgTable("user_progress", {
     activeCourseId: integer("active_course_id").references(() => courses.id, {onDelete: "cascade"}),
     hearts: integer("hearts").notNull().default(5),
     points: integer("points").notNull().default(0),
-    theme: text("theme").notNull().default("cupcake")
+    theme: text("theme").notNull().default("cupcake"),
+    maxhearts: integer("maxhearts").notNull().default(5),
 })
 
 export const userProgressRelations = relations(userProgress, ({one}) => ({
@@ -97,3 +98,11 @@ export const challengeProgressRelations = relations(challengeProgress, ({one}) =
         references: [challenges.id],
     })
 }))
+export const userSubcription = pgTable("user_subscription", {
+    id: serial("id").primaryKey(),
+    userId: text("user_Id").notNull().unique(),
+    stripeCustomerId: text("stripe_customer_id").notNull().unique(),
+    stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+    stripePriceId: text("stripe_price_id").notNull().unique(),
+    stripeEnd: timestamp("stripe_end").notNull(),
+})

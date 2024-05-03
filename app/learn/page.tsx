@@ -44,6 +44,7 @@ const Learn = async ({ points, subbed, hearts, active }: Props) => {
 
                         {units.map((unit) => (
                             <Units
+                                key={unit.id}
                                 id={unit.id}
                                 order={unit.order}
                                 description={unit.description}
