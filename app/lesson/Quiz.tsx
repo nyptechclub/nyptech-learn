@@ -5,8 +5,9 @@ import { useState, useTransition } from "react";
 import { Header } from "./header";
 import { ChallengeOptionType } from "./ChallengeOptions";
 import { Footer } from "./Footer";
-import upsertChallengeProgress from "@/actions/challenge-progress";
+import {upsertChallengeProgress} from "@/actions/challenge-progress";
 import { toast } from "sonner"
+import { reduceHearts } from "@/actions/user-progress";
 
 type Props = {
     lsnId: number;
@@ -68,10 +69,22 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                         setHearts((prev) => Math.min(prev + 1, 5))
                     }
                 })
-                .catch(()=> toast.error("Someting went wrong, please try agian"))
+                .catch(()=> toast.error("Someting went wrong, please try again"))
             })
         } else {
-
+            startTransition(() =>{
+                reduceHearts(challenge.id).then((response)=>{
+                    if (response?.error === "hearts"){
+                        console.error("Missing Hearts")
+                        return;
+                    }
+                    setstatus("wrong")
+                    if (!response?.error){
+                        setHearts((prev)=> Math.max(prev - 1, 0))
+                    }
+                })
+                .catch(()=> toast.error("Something when wrong please try again."))
+            })
         }
     }
     const title = challenge.type === "ASSIST" ? "Select the correct meaning" : challenge.question
@@ -109,14 +122,14 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                             onSelect={onSelect}
                             status={status}
                             selectedOption={selectedOption}
-                            disabled={false}
+                            disabled={pending}
                             type={challenge.type}
                         />
                     </div>
                 </div>
             </div>
             <Footer
-            disabled={!selectedOption}
+            disabled={pending || !selectedOption}
             status={status}
             onCheck={onContinue}
             />

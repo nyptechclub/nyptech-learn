@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-const upsertChallengeProgress = async(challengeId: number) => {
+export const upsertChallengeProgress = async(challengeId: number) => {
     const {userId} = await auth()
     if (!userId){
         throw new Error("Unauthorized")
@@ -18,11 +18,20 @@ const upsertChallengeProgress = async(challengeId: number) => {
     }
     const existchallenge = await db.query.challenges.findFirst({
         where: and(
+            eq(challenges.id, challengeId),
+        ),
+    })
+    if (!challenges){
+        throw new Error("Challenge Not Found")
+    }
+    const lessonId = challenges.lessonId
+    const existingchallengeProgress = await db.query.challengeProgress.findFirst({
+        where: and(
             eq(challengeProgress.userId, userId),
             eq(challengeProgress.challengeId, challengeId),
         ),
     })
-    const isPractice = !!existchallenge
+    const isPractice = !!existingchallengeProgress;
     if (currentUserProgress.hearts === 0 && !isPractice){
         return {error: "hearts"}
     }
@@ -31,7 +40,7 @@ const upsertChallengeProgress = async(challengeId: number) => {
             completed: true,
         })
         .where(
-            eq(challengeProgress.id, existchallenge.id)
+            eq(challengeProgress.id, existingchallengeProgress.id)
         )
         await db.update(userProgress).set({
             hearts: Math.min(currentUserProgress.hearts + 1, 5),
@@ -57,5 +66,3 @@ const upsertChallengeProgress = async(challengeId: number) => {
     revalidatePath("/leaderboard")
     revalidatePath(`/lesson/${challenges.lessonId}`)
 }
- 
-export default upsertChallengeProgress;
