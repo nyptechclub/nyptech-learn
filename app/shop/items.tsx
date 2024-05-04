@@ -7,7 +7,7 @@ import { Coins } from "lucide-react"
 import Image from "next/image"
 import { useTransition } from "react"
 import { toast } from "sonner"
-const POINTS = 500
+import { POINTS } from "@/constants"
 type Props = {
  hearts: number
  points: number

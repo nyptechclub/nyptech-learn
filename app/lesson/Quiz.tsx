@@ -1,6 +1,6 @@
 "use client"
 
-import { challengeOptions, challenges } from "@/db/schema";
+import { challengeOptions, challenges, userSubcription } from "@/db/schema";
 import { useState, useTransition } from "react";
 import { Header } from "./header";
 import { ChallengeOptionType } from "./ChallengeOptions";
@@ -23,9 +23,13 @@ type Props = {
     })[]
     hearts: number;
     percent: number;
-    userSubbed: any;
+    userSubbed: typeof userSubcription.$inferSelect & {
+        isActive: boolean
+    } | null ;
 }
+
 export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Props) => {
+
     const {open: openHeartsModal} = useHeartsModal()
     const {open: openPracticeModal} = usePracticeModal()
     useMount(()=>{

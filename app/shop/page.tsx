@@ -2,7 +2,6 @@ import { getUserProgress, getUserSubscription } from "@/db/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Items } from "./items";
-import { userSubcription } from "@/db/schema";
 
 const ShopPage = async () => {
     const userProgressData = getUserProgress()

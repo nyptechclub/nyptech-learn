@@ -1,13 +1,13 @@
 "use server";
 
 import db from "@/db/drizzle";
-import { getCourseById, getUserProgress } from "@/db/queries";
-import { challengeProgress, challenges, userProgress } from "@/db/schema";
+import { getCourseById, getUserProgress, getUserSubscription } from "@/db/queries";
+import { challengeProgress, challenges, userProgress, userSubcription } from "@/db/schema";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-const POINTS = 500
+import { POINTS } from "@/constants";
 export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth();
   const user = await currentUser();
@@ -17,6 +17,9 @@ export const upsertUserProgress = async (courseId: number) => {
   const course = await getCourseById(courseId);
   if (!course) {
     throw new Error("Course Not Found");
+  }
+  if (!course.units.length || !course.units[0].lessons.length){
+    throw new Error("course is empty")
   }
   const existingUserProgress = await getUserProgress();
   if (existingUserProgress) {
@@ -45,6 +48,7 @@ export const reduceHearts = async (challengeId: number) => {
     throw new Error("Unauthorized");
   }
   const currentUserProgress = await getUserProgress();
+  const subbed = await getUserSubscription()
   const Challenge = await db.query.challenges.findFirst({
     where: eq(challenges.id, challengeId)
   })
@@ -64,6 +68,9 @@ export const reduceHearts = async (challengeId: number) => {
   }
   if (!currentUserProgress) {
     throw new Error("User Progress Not Found");
+  }
+  if (subbed?.isActive){
+    return {error: "subscription"}
   }
   if (currentUserProgress.hearts === 0){
     return {error: "hearts"}
@@ -103,4 +110,4 @@ export const refillHearts = async() => {
 //set hearts as a column to user
 //add a normal learning module
 //add more to the story
-//cms for this shit
+//all ids in admin.ts

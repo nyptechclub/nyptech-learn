@@ -1,28 +1,22 @@
-import { Feedwrapper } from "@/components/ui/feed-wrapper";
+import { Feedwrapper } from "@/components/general/feed-wrapper";
 import { Header } from "./header";
 import Link from "next/link";
 import { Coins, HeartPulseIcon, InfinityIcon } from "lucide-react";
-import { getCourseProgress, getUnits, getUserProgress, getlessonPercent } from "@/db/queries";
+import { getCourseProgress, getUnits, getUserProgress, getUserSubscription, getlessonPercent } from "@/db/queries";
 import { redirect } from "next/navigation";
 import { Units } from "./units";
-import { lessons, units as unitsSchema } from "@/db/schema";
+import { lessons, units as unitsSchema, userSubcription } from "@/db/schema";
+import Promo from "@/components/general/promo";
+import Quests from "@/components/general/Quests";
 
-type Props = {
-    points: number;
-    subbed: boolean;
-    hearts: number;
-    active: {
-        imgsrc: string;
-        title: string;
-    };
-};
-const Learn = async ({ points, subbed, hearts, active }: Props) => {
+const Learn = async () => {
     const userProgressData = getUserProgress();
     const courseProgressData = getCourseProgress();
     const lessonpercentData = getlessonPercent();
     const unitsData = getUnits();
-    const [userProgress, units, courseProgress, lessonpercent] = await Promise.all([
-        userProgressData, unitsData, courseProgressData, lessonpercentData
+    const subbedData = getUserSubscription()
+    const [userProgress, units, courseProgress, lessonpercent, subbed] = await Promise.all([
+        userProgressData, unitsData, courseProgressData, lessonpercentData, subbedData
     ])
     if (!userProgress || !userProgress.activeCourse) {
         redirect("/courses")
@@ -30,7 +24,6 @@ const Learn = async ({ points, subbed, hearts, active }: Props) => {
     if (!courseProgress) {
         redirect("/courses")
     }
-
     return (
         <section className="min-h-screen">
             <Feedwrapper>
@@ -71,12 +64,16 @@ const Learn = async ({ points, subbed, hearts, active }: Props) => {
                                 </Link>
                                 <Link href="/shop" className="btn btn-outline btn-accent flex items-center gap-2">
                                     <HeartPulseIcon className="text-accent"/>
-                                    {subbed ? <InfinityIcon className="h-4 w-4 text-accent" /> : userProgress.hearts}
+                                    {subbed ? <InfinityIcon className="h-4 w-4 text-accent shrink-0" /> : userProgress.hearts}
                                 </Link>
 
                             </li>
-
-                            <li><a>Sidebar Item 2</a></li>
+                            {!subbed && (
+                            <li><Promo/></li>
+                            )}
+                            <li>
+                                <Quests points={userProgress.points}/>
+                            </li>
                         </ul>
                     </div>
                 </div>

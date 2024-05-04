@@ -17,7 +17,7 @@ export const Header = ({hearts, percent, hasSub}: Props) => {
             <div className="items-center font-bold flex flex-row gap-2">
                 <HeartIcon
                 className="text-accent btn btn-circle btn-accent btn-sm"/>{
-                    hasSub ? <InfinityIcon className="btn btn-circle btn-accent btn-sm text-accent"/> : hearts
+                    hasSub ? <InfinityIcon className="btn btn-circle btn-accent btn-sm text-accent shrink-0"/> : hearts
                 }
             </div>
         </div>
