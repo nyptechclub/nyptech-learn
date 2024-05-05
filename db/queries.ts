@@ -16,6 +16,19 @@ export const getUserProgress = cache(async () => {
     })
     return data;
 })
+export const getUser = async () => {
+    const { userId } = await auth();
+    if (!userId) {
+        return null;
+    }
+    const data = await db.query.userProgress.findFirst({
+        where: eq(userProgress.userId, userId),
+        with:{
+            activeCourse: true,
+        }
+    })
+    return data;
+}
 export const getUnits = cache(async () => {
     const {userId} = await auth();
     const userProgress = await getUserProgress();

@@ -43,7 +43,7 @@ export const Card = ({
         )} >
             {audio}
             {imageSrc && (
-                <figure><img src={imageSrc} alt="Shoes" /></figure>
+                <figure><img src={imageSrc} alt={text} /></figure>
             ) }
             <div className={cn("flex items-center justify-between", type === "ASSIST" && "flex-row-reverse")}>
                 {type === "ASSIST" && <div/>}

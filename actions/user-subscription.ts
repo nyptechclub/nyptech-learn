@@ -4,13 +4,14 @@ import { getUserSubscription } from "@/db/queries";
 import { stripe } from "@/lib/stripe";
 import { absoluteUrl } from "@/lib/utils"
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 const returnUrl = absoluteUrl("/shop");
 export const createStripeUrl = async() => {
     const {userId} = await auth()
     const user = await currentUser()
     if (!userId || !user){
-        throw new Error("Unauthorized")
+        throw new Error("Unauthorized") && redirect("/")
     }
     const userSubscription = await getUserSubscription()
     if (userSubscription && userSubscription.stripeCustomerId){

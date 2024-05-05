@@ -9,3 +9,5 @@ export default function Main({
         </div>
     );
 }
+
+//I use this for easy copy, feel free to remove and add to docs or smth --sven

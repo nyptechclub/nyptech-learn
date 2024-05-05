@@ -12,14 +12,14 @@ export const upsertUserProgress = async (courseId: number) => {
   const { userId } = await auth();
   const user = await currentUser();
   if (!userId || !user) {
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized") && redirect("/")
   }
   const course = await getCourseById(courseId);
   if (!course) {
-    throw new Error("Course Not Found");
+    throw new Error("Course Not Found") && redirect("/")
   }
   if (!course.units.length || !course.units[0].lessons.length){
-    throw new Error("course is empty")
+    throw new Error("course is empty") && redirect("/")
   }
   const existingUserProgress = await getUserProgress();
   if (existingUserProgress) {
@@ -45,7 +45,7 @@ export const upsertUserProgress = async (courseId: number) => {
 export const reduceHearts = async (challengeId: number) => {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error("Unauthorized");
+    throw new Error("Unauthorized") && redirect("/")
   }
   const currentUserProgress = await getUserProgress();
   const subbed = await getUserSubscription()
@@ -53,7 +53,7 @@ export const reduceHearts = async (challengeId: number) => {
     where: eq(challenges.id, challengeId)
   })
   if (!Challenge){
-    throw new Error("Challenge Not Found")
+    throw new Error("Challenge Not Found") && redirect("/")
   }
   const lessonId = Challenge.lessonId
   const existingchallengeProgress = await db.query.challengeProgress.findFirst({
@@ -64,10 +64,10 @@ export const reduceHearts = async (challengeId: number) => {
   });
   const isPractice = !!existingchallengeProgress;
   if (isPractice) {
-    return { error: "practice" };
+    return { error: "practice" }
   }
   if (!currentUserProgress) {
-    throw new Error("User Progress Not Found");
+    throw new Error("User Progress Not Found") && redirect("/")
   }
   if (subbed?.isActive){
     return {error: "subscription"}
@@ -88,13 +88,13 @@ export const reduceHearts = async (challengeId: number) => {
 export const refillHearts = async() => {
   const currentUserProgress = await getUserProgress()
   if (!currentUserProgress){
-    throw new Error("User progress not found")
+    throw new Error("User progress not found") && redirect("/")
   }
   if (currentUserProgress.hearts === 5) {
-    throw new Error("Hearts are already full")
+    throw new Error("Hearts are already full") && redirect("/")
   }
   if (currentUserProgress.points < POINTS){
-    throw new Error("Not enough points")
+    throw new Error("Not enough points") && redirect("/")
   }
   await db.update(userProgress).set({
     hearts: 5,
@@ -105,9 +105,22 @@ export const refillHearts = async() => {
   revalidatePath("/quests")
   revalidatePath("/leaderboard")
 }
+export const updatetheme = async (values: string) => {
+  const currentUserProgress = await getUserProgress()
+  if (!currentUserProgress){
+    throw new Error("User progress not found") && redirect("/")
+  }
+  await db.update(userProgress).set({
+    theme: values,
+  }).where(eq(userProgress.userId, currentUserProgress.userId))
+  revalidatePath("/shop")
+  revalidatePath("/learn")
+  revalidatePath("/quests")
+  revalidatePath("/leaderboard")
+}
 //todo: set price to a variable in db
 //add more courses
-//set hearts as a column to user
-//add a normal learning module
+//add a normal learning module (teach content)
 //add more to the story
 //all ids in admin.ts
+//tell model not login

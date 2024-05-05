@@ -2,20 +2,23 @@ import ExitModal from '@/components/modals/exit-modal';
 import './globals.css';
 import { Button } from "@/components/ui/button";
 import { ClerkLoaded, ClerkLoading, ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Home, Loader, Menu, ShoppingCart, Sword, Trophy } from "lucide-react";
+import { BookCheck, Home, Loader, Menu, Settings2, ShoppingCart, Sword, Trophy } from "lucide-react";
 import Link from 'next/link';
 import { Toaster } from "@/components/ui/sonner"
 import HeartsModal from '@/components/modals/hearts-modal';
 import PracticeModal from '@/components/modals/practice-modal';
-export default function RootLayout({
+import { currentUser } from '@clerk/nextjs/server';
+import { getUserProgress } from '@/db/queries';
+const RootLayout = async({
   children,
 }: {
   children: React.ReactNode
-}) {
-  return (
+}) =>  {
+    const self = await getUserProgress();
+     return (
     <ClerkProvider>
-      <html lang="en" data-theme="cupcake">
-        <body>
+      <html lang="en">
+        <body className="min-h-screen flex">
           <div className="drawer">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col">
@@ -27,11 +30,14 @@ export default function RootLayout({
                 </div>
                 
                 <div className="flex-none hidden lg:block">
+                <input type="checkbox"         
+value={self?.theme ?? "cupcake"} 
+ className="invisible theme-controller" checked disabled/>
                   <ul className="menu menu-horizontal text-accent">
-                    <li><Link href="/learn"><Home className="text-accent"/>Learn</Link></li>
-                    <li><Link href="/leaderboard"><Trophy className="text-accent"/>Leaderboard</Link></li>
-                    <li><Link href="/quests"><Sword className="text-accent"/>Quests</Link></li>
-                    <li><Link href="/shop"><ShoppingCart  className="text-accent" />Shop</Link></li>
+                    <li><Link href="/learn"><Home/>Learn</Link></li>
+                    <li><Link href="/leaderboard"><Trophy/>Leaderboard</Link></li>
+                    <li><Link href="/quests"><Sword/>Quests</Link></li>
+                    <li><Link href="/shop"><ShoppingCart  />Shop</Link></li>
 
                   </ul>
                 </div>
@@ -66,11 +72,14 @@ export default function RootLayout({
             </div>
             <div className="drawer-side">
               <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
-              <ul className="menu p-4 w-80 min-h-full bg-accent-foreground text-accent">
-                <li><Link href="/learn"><Home className="text-accent"/>Learn</Link></li>
-                <li><Link href="/leaderboard"><Trophy className="text-accent" />Leaderboard</Link></li>
-                <li><Link href="/quests"><Sword className="text-accent"/>Quests</Link></li>
-                <li><Link href="/shop"><ShoppingCart className="text-accent" />Shop</Link></li>
+              <ul className="menu p-4 w-80 min-h-full bg-accent-content gap-4">
+              <li ><Link href="/" className="btn btn-accent"><Home/>Home</Link></li>
+                <li><Link href="/learn" className="btn btn-accent"><BookCheck/>Learn</Link></li>
+                <li><Link href="/leaderboard" className="btn btn-accent"><Trophy />Leaderboard</Link></li>
+                <li><Link href="/quests" className="btn btn-accent"><Sword/>Quests</Link></li>
+                <li><Link href="/shop" className="btn btn-accent"><ShoppingCart />Shop</Link></li> 
+                <li><Link href="/theme" className="btn btn-accent"><Settings2 />Theme</Link></li> 
+                {/* Putting the btn in list makes it look like double button (li) is needed for sidebar */}
               </ul>
             </div>
           </div>
@@ -79,3 +88,4 @@ export default function RootLayout({
     </ClerkProvider>
   )
 }
+export default RootLayout

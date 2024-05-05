@@ -6,16 +6,19 @@ import { challengeProgress, challenges, lessons, userProgress } from "@/db/schem
 import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { toast } from "sonner";
 
 export const upsertChallengeProgress = async(challengeId: number) => {
     const {userId} = await auth()
     if (!userId){
-        throw new Error("Unauthorized")
+        toast.error("Unauthorized")
+        return
     }
     const currentUserProgress = await getUserProgress()
     const userSubcription = await getUserSubscription()
     if (!currentUserProgress){
-        throw new Error ("User Not Found")
+        toast.error("User Not Found")
+        return
     }
     const existchallenge = await db.query.challenges.findFirst({
         where: and(
@@ -23,7 +26,8 @@ export const upsertChallengeProgress = async(challengeId: number) => {
         ),
     })
     if (!challenges){
-        throw new Error("Challenge Not Found")
+        toast.error("Challenge Not Found")
+        return
     }
     const lessonId = challenges.lessonId
     const existingchallengeProgress = await db.query.challengeProgress.findFirst({

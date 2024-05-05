@@ -1,20 +1,19 @@
 import { ClerkLoaded, ClerkLoading } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Home() {
     return ( 
-        <section>
-            <ClerkLoading>
-            <span className="loading loading-infinity loading-sm"></span>
-
-            </ClerkLoading>
-            <ClerkLoaded>
-                <div className="text-xl">
-                    NYPTECH
+        <section className="flex items-center justify-center flex-col hero-content">
+                <img src="https://nyptech-learn.vercel.app/favicon.ico"></img>
+                <div className="text-2xl font-bold">
+                    NYPTECH-LEARN
                 </div>
                 <div>
-                    Learn With Us
+                    Learn With Us, sign in to continue.
                 </div>
-            </ClerkLoaded>
+                <Link href="/learn" className="btn">
+                    Learn Now
+                </Link>
         </section>
      );
 }

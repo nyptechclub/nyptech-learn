@@ -55,10 +55,9 @@ const Learn = async () => {
                     <div className="drawer-side">
                         <label htmlFor="my-drawer-4" className="drawer-overlay" aria-label="close sidebar"></label>
                         <ul className="menu p-4 w-80 min-h-full bg-accent-foreground text-accent z-10">
-                        <li className="avatar"><img src={userProgress.activeCourse.imageSrc} className="rounded-lg drop-shadow-md border object cover mb-4 w-20 bg-primary">
+                            <li className="flex gap-2 flex-row">
+                            <img src={userProgress.activeCourse.imageSrc} className="rounded-lg drop-shadow-md border object cover mb-4 w-20 bg-primary">
                             </img>
-                            </li>
-                            <li className="flex gap-2">
                                 <Link href="/shop" className="btn btn-outline btn-accent flex items-center gap-2">
                                     {userProgress.points} <Coins className="text-accent"/>
                                 </Link>
