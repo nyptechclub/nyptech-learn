@@ -43,7 +43,7 @@ value={self?.theme ?? "cupcake"}
                 </div>
                 <div className="flex-end">
                   <ClerkLoading>
-                    <span className="loading loading-infinity loading-sm"></span>
+                    <span className="loading loading-infinity loading-sm text-accent"></span>
                   </ClerkLoading>
                   <ClerkLoaded>
                     <SignedOut>
