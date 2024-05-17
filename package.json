@@ -12,9 +12,9 @@
     "seed": "tsx ./scripts/seed.ts",
     "prod": "tsx ./scripts/prod.ts",
     "reset": "tsx ./scripts/prod.ts"
-
   },
   "dependencies": {
+    "@canva/design": "^1.8.0",
     "@clerk/nextjs": "^5.0.3",
     "@neondatabase/serverless": "^0.9.1",
     "@radix-ui/react-dialog": "^1.0.5",

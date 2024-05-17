@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@canva/design': ^1.8.0
   '@clerk/nextjs': ^5.0.3
   '@neondatabase/serverless': ^0.9.1
   '@radix-ui/react-dialog': ^1.0.5
@@ -47,6 +48,7 @@ specifiers:
   zustand: ^4.5.2
 
 dependencies:
+  '@canva/design': 1.8.0
   '@clerk/nextjs': 5.0.5_72zzymswl2u5rnee4bgvv7j4di
   '@neondatabase/serverless': 0.9.1
   '@radix-ui/react-dialog': 1.0.5_iv3fbzfqanoonyhoyrhhflyvgy
@@ -148,6 +150,12 @@ packages:
       '@babel/helper-string-parser': 7.24.1
       '@babel/helper-validator-identifier': 7.24.5
       to-fast-properties: 2.0.0
+    dev: false
+
+  /@canva/design/1.8.0:
+    resolution: {integrity: sha512-n4cQ5x5z+SZu506JMszv8S/XoQMIkc/giE1bLTYWQN1fMgDCyAVYSpFuZd5uulzU9gYbBmTAmfsYdaKjLT0IWg==}
+    peerDependencies:
+      '@canva/error': ^1.0.0
     dev: false
 
   /@clerk/backend/1.1.1_nnrd3gsncyragczmpvfhocinkq:

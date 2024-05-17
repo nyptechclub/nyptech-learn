@@ -38,6 +38,7 @@ value={self?.theme ?? "cupcake"}
                     <li><Link href="/leaderboard"><Trophy/>Leaderboard</Link></li>
                     <li><Link href="/quests"><Sword/>Quests</Link></li>
                     <li><Link href="/shop"><ShoppingCart  />Shop</Link></li>
+                    <li><Link href="/theme"><ShoppingCart  />Theme</Link></li>
 
                   </ul>
                 </div>

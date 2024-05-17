@@ -14,6 +14,7 @@ export default function Home() {
                 <Link href="/learn" className="btn">
                     Learn Now
                 </Link>
+                
         </section>
      );
 }

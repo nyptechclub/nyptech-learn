@@ -24,6 +24,7 @@ export const ChallengeEdit = () => {
     validate={[required()]}
 
         />
+        <TextInput source="lesson" label="lesson" />
                 <ReferenceInput
                     source="lessonId"
                     reference="lessons" />

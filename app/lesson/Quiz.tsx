@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Confetti from "react-confetti"
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
+import Link from "next/link";
 type Props = {
     lsnId: number;
     lsnChallenges: (typeof challenges.$inferSelect & {
@@ -174,6 +175,13 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
             />
             <div className="card text-center items-center">
                 <div className="card-body">
+                {challenge && challenge.lesson && 
+  <Link href={challenge.lesson}>
+    <Button>Go to lesson</Button>
+  </Link>
+}
+
+
                     <h1 className="card-title ">
                         {title}
                     </h1>
@@ -183,7 +191,7 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                                 <div className="chat chat-start">
                                     <div className="chat-image avatar">
                                         <div className="w-10 mask mask-squircle">
-                                            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                                            <img src="/wizard.png" />
                                         </div>
                                     </div>
                                     <div className="chat-bubble chat-bubble-primary">
@@ -202,6 +210,7 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                             disabled={pending}
                             type={challenge.type}
                         />
+
                     </div>
                 </div>
             </div>
