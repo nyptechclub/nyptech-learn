@@ -25,7 +25,7 @@ const Learn = async () => {
         redirect("/courses")
     }
     return (
-        <section className="min-h-screen">
+        <section className="min-h-screen ">
             <Feedwrapper>
                 <div className="drawer drawer-end">
                     <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />

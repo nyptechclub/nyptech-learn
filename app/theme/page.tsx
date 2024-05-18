@@ -8,6 +8,9 @@ const ChatPage = async() => {
                 <h1 className="card-title">
                     Theme Settings
                 </h1>
+                <div>
+                    Every good wizard needs a bit of style!
+                </div>
                 {stream?.userId === null || stream?.userId === undefined ? (
                     <div className="justify-center">Theme not found</div>
                 ) : (

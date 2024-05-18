@@ -18,7 +18,7 @@ const RootLayout = async({
      return (
     <ClerkProvider>
       <html lang="en">
-        <body className="min-h-screen flex">
+        <body className="min-h-screen flex bg-base-100 text-base-content">
           <div className="drawer">
             <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content flex flex-col">
@@ -62,7 +62,7 @@ value={self?.theme ?? "cupcake"}
                 </div>
               </div>
               
-              <main className="flex container flex-col">
+              <main className="flex container flex-col ">
               <Toaster />
                 <ExitModal/>
                 <HeartsModal/>

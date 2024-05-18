@@ -14,7 +14,7 @@ export const GET = async (
     // Manually select only the points field to return
     const data = fullData ? fullData.points : null;
 
-    return NextResponse.json(data || {})
+    return NextResponse.json(data)
   } catch (error) {
     console.error('Failed to fetch user progress:', error)
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

@@ -25,6 +25,9 @@ const LeaderboardPage = async () => {
             <div>
             See your position to other learners (top 50)
             </div>
+            <div className="m-5 bg-base-200 p-5 rounded-xl">
+            "Where am I?" he muttered, rising to his feet. His eyes were drawn upwards, where a colossal leaderboard floated in the sky, displaying the names and ranks of wizards currently inhabiting this strange world.
+            </div>
             <div className="divider"></div> 
             {leaderboard.map((userProgress, index)=>{
                 return(

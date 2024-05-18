@@ -37,12 +37,12 @@ export const Items = ({hearts, points, hasActiveSubscription}: Props) => {
         <ul className="w-full">
            <div className="flex items-center w-full p-4 gap-x-4 border-t-2">
             <div className="flex flex-row flex-wrap m-5 gap-4 ">
-            <div className="card-body shadow-xl rounded-xl bg-accent text-bold text-xl">
+            <div className="card-body shadow-xl rounded-xl bg-base-300 text-bold text-xl">
                     Current Points: {points} <br>
                     </br>
                     Current Hearts: {hearts}
                 </div>
-                <div className="card-body shadow-xl rounded-xl bg-accent">
+                <div className="card-body shadow-xl rounded-xl bg-base-300">
                     Refill Hearts:
                 <Button
             disabled={hearts === 5 || points < POINTS} className="btn"
@@ -54,7 +54,7 @@ export const Items = ({hearts, points, hasActiveSubscription}: Props) => {
                 )}
             </Button>
                 </div>
-                <div className="card-body shadow-xl rounded-xl bg-accent items-center">
+                {/* <div className="card-body shadow-xl rounded-xl bg-accent items-center">
                 <Image
                     src="/unlimited.svg"
                     alt="unlimited"
@@ -66,7 +66,7 @@ export const Items = ({hearts, points, hasActiveSubscription}: Props) => {
                 onClick={onUpgrade} disabled={pending || hasActiveSubscription}>
                     {hasActiveSubscription? "settings" : "upgrade"}
             </Button>
-                </div>
+                </div> */}
             </div>
 
             </div> 

@@ -27,7 +27,17 @@ const QuestPage = async () => {
         </div>
         <div>
             Complete Quest by Earning Points
-        </div><ul className="w-full">
+        </div>
+        <div className="m-5 p-5 bg-base-200 rounded-xl">
+            Determined, he set off to find more information about the tournament. Along the way, he passed fellow wizards practicing their spells, honing their abilities for the upcoming competition. He marveled at their mastery and felt a twinge of doubt about his own capabilities.
+            <br/><br/>
+            He arrived at the grand Pixeltown Library, a towering structure filled with ancient tomes and magical scrolls. Inside, he found the Head Librarian, an elderly wizard with a long white beard and kind eyes.
+            <br/><br/>
+            &quot;Excuse me,&quot; he said, bowing respectfully. &quot;I need to know more about the Wizard Tournament. How can I participate?&quot;
+            <br/><br/>
+            The Head Librarian smiled knowingly. &quot;Ah, another brave soul seeking the path home. The tournament tests not just your magical prowess, but your wisdom, courage, and heart. Train well, learn from those around you, and remember that true power lies within.&quot;
+        </div>
+        <ul className="w-full">
             {quests.map((quest) => {
                 const progres = (userProgress.points / quest.value) * 100
                 return (
@@ -44,8 +54,8 @@ const QuestPage = async () => {
                 )
             })}
         </ul>
-        {!userSubcription?.isActive && (<Promo />
-        )}
+        {/* {!userSubcription?.isActive && (<Promo />
+        )} todo upgrade*/ }
     </div>
 
     );

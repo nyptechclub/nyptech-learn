@@ -144,6 +144,8 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                         <div className="text-base">
                             You did it!
                         </div>
+                        <img src="/chestopen.png"/>
+
                         <div className="flex flex-row gap-4">
                             <Button variant={"gooeyRight"} className="btn btn-success">
                                 Coins Left: {challenges.length * 10} <Coins />

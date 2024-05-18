@@ -7,7 +7,7 @@ title: string
 }
 export const Header = ({title}: Props) => {
     return ( 
-        <Button variant="expandIcon" Icon={ArrowLeft} iconPlacement="left" className="text-2xl p-5 ">
-        <Link href="/courses">{title}</Link></Button>
+        <Link href="/courses"><Button variant="expandIcon" Icon={ArrowLeft} iconPlacement="left" className="text-2xl p-5 ">
+        {title}</Button></Link>
     );
 }

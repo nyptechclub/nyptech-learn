@@ -23,8 +23,9 @@ const ShopPage = async () => {
                 Shop
             </div>
             <div>
-            Use your points here
+            &quot;What may I get you?&quot;
             </div> 
+            <img src="/girl.png" className="w-20 h-20" />
 
             <Items
                 hearts={userProgress.hearts}
