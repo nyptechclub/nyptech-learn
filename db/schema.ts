@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { boolean, integer, pgEnum, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { createId } from '@paralleldrive/cuid2';
 
 export const courses = pgTable("courses", {
   id: serial("id").primaryKey(),
@@ -118,3 +119,48 @@ export const userSubcription = pgTable("user_subscription", {
   stripePriceId: text("stripe_price_id").notNull().unique(),
   stripeEnd: timestamp("stripe_end").notNull(),
 })
+export const cCourses = pgTable("cCourses", {
+  id: text("id").primaryKey().default(createId()),
+  title: text("title").notNull(),
+  imageSrc: text("image_src").notNull(),
+  description: text("description").notNull(),
+  isPublished: boolean("is_published").default(false),
+  categoryId: text("category_id").references(() => categories.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+export const cCoursesRelations = relations(cCourses, ({ many, one }) => ({
+  userProgress: many(userProgress),
+  units: many(units),
+  attachments: many(attachments),
+  category: one(categories, {
+    fields: [cCourses.categoryId],
+    references: [categories.id]
+  })
+}));
+
+// Corrected categories table
+export const categories = pgTable("categories", {
+  id: text("id").primaryKey().default(createId()),
+  name: text("name").unique().notNull(),
+});
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  courses: many(cCourses)
+}));
+
+// Corrected attachments table
+export const attachments = pgTable("attachments", {
+  id: text("id").primaryKey().default(createId()),
+  name: text("name").notNull(),
+  url: text("url").notNull(),
+  courseId: text("course_id").references(() => cCourses.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+export const attachmentsRelations = relations(attachments, ({ one }) => ({
+  course: one(cCourses, {
+    fields: [attachments.courseId],
+    references: [cCourses.id],
+  })
+}));
