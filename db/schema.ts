@@ -121,9 +121,10 @@ export const userSubcription = pgTable("user_subscription", {
 })
 export const cCourses = pgTable("cCourses", {
   id: text("id").primaryKey().default(createId()),
-  title: text("title").notNull(),
-  imageSrc: text("image_src").notNull(),
-  description: text("description").notNull(),
+  title: text("title"),
+  userId: text("userId"),
+  imageSrc: text("image_src"),
+  description: text("description"),
   isPublished: boolean("is_published").default(false),
   categoryId: text("category_id").references(() => categories.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow()
@@ -139,7 +140,6 @@ export const cCoursesRelations = relations(cCourses, ({ many, one }) => ({
   })
 }));
 
-// Corrected categories table
 export const categories = pgTable("categories", {
   id: text("id").primaryKey().default(createId()),
   name: text("name").unique().notNull(),
@@ -149,11 +149,10 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
   courses: many(cCourses)
 }));
 
-// Corrected attachments table
 export const attachments = pgTable("attachments", {
   id: text("id").primaryKey().default(createId()),
-  name: text("name").notNull(),
-  url: text("url").notNull(),
+  name: text("name"),
+  url: text("url"),
   courseId: text("course_id").references(() => cCourses.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow()
 });
