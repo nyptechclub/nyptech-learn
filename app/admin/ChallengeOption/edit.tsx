@@ -13,8 +13,8 @@ export const ChallengeOptionEdit = () => {
                 <ReferenceInput
                     source="challengeId"
                     reference="challenges" />
-                <TextInput source="imageSrc" validate={[required()]} label="imageSrc" />
-                <TextInput source="audioSrc" validate={[required()]} label="audioSrc" />
+                <TextInput source="imageSrc" label="imageSrc" />
+                <TextInput source="audioSrc" label="audioSrc" />
 
             </SimpleForm>
         </Edit>

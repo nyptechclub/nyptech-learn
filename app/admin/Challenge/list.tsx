@@ -3,8 +3,8 @@ import { Datagrid, List, ReferenceField, SelectField, TextField } from 'react-ad
 
 export const ChallengeList = () => {
     return(
-        
-    <List>
+        <div  className='w-full max-w-96'>
+<List>
     <Datagrid rowClick="edit">
         <TextField source="id" />
         <TextField source="question" />
@@ -27,5 +27,7 @@ export const ChallengeList = () => {
     </Datagrid>
 </List>
 
+        </div>
+    
     )
 };

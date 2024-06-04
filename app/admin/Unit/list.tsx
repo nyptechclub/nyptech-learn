@@ -3,16 +3,18 @@ import { Datagrid, List, ReferenceField, TextField } from 'react-admin';
 
 export const UnitList = () => {
     return(
-        
+    <div className='w-full'>
     <List>
     <Datagrid rowClick="edit">
         <TextField source="id" />
         <TextField source="title" />
         <TextField source="description" />
-        <ReferenceField source="course_id" reference="courses"/>
+        <ReferenceField source="courseId" reference="courses"/>
         <TextField source="order" />
     </Datagrid>
 </List>
+    </div>    
+
 
     )
 };

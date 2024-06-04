@@ -35,7 +35,7 @@ export const Card = ({
     return ( 
         <div 
         onClick={handleclick} 
-        className={cn("h-full border-2 rounded-xl border-b-4 hover:bg-accent/5 p-4 lg:p-6 cursor-pointer active:border-b-2", 
+        className={cn("h-full border-2 rounded-xl border-b-4 hover:bg-base/5 p-4 lg:p-6 cursor-pointer active:border-b-2", 
         selected && "border-base-300 bg-base-100", selected && status === "correct" && "border-green-300 bg-green-100 hover:bg-green-100",
         selected && status === "wrong" && "border-rose-300 bg-rose-100 hover:bg-rose-100",
         disabled && "pointer-events-none hover:bg-base",
@@ -48,14 +48,14 @@ export const Card = ({
             <div className={cn("flex items-center justify-between", type === "ASSIST" && "flex-row-reverse")}>
                 {type === "ASSIST" && <div/>}
                 <p className={cn(
-                    "lg:text-base text-sm text-primary", selected && "text-accent-foreground", selected && status === "correct" && "text-green-500", selected && status === "wrong" && "text-rose-500"
+                    "lg:text-base text-sm", selected && "text-base-content", selected && status === "correct" && "text-green-500", selected && status === "wrong" && "text-rose-500"
                 )}>
                     {text}
                 </p>
                 <div className={cn("flex items-center justify-between", type === "ASSIST" && "flex-row-reverse")}>
                 {type === "ASSIST" && <div/>}
                 <div className={cn(
-                    "btn mt-5", selected && "text-accent-foreground", selected && status === "correct" && "text-green-500", selected && status === "wrong" && "text-rose-500")}>
+                    "btn mt-5", selected && "text-base-content", selected && status === "correct" && "text-green-500", selected && status === "wrong" && "text-rose-500")}>
                     {shortcut}
                 </div>
                 </div>

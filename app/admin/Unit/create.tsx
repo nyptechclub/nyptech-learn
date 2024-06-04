@@ -9,7 +9,7 @@ export const UnitCreate = () => {
                 <TextInput source="title" validate={[required()]} label="Title" />
                 <TextInput source="description" validate={[required()]} label="description" />
                 <ReferenceInput
-                    source="course_id"
+                    source="courseId"
                     reference="courses" />
                 <NumberInput source="order"
                  validate={[required()]} label="order" />
