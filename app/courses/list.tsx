@@ -8,14 +8,14 @@ import { upsertUserProgress } from "@/actions/user-progress";
 
 type Props = {
  courses: typeof courses.$inferSelect[];
- activeCourseId?: typeof userProgress.$inferSelect.activeCourseId;
+ activeCourse?: typeof userProgress.$inferSelect.activeCourse;
 }
-export const List = ({courses, activeCourseId}: Props) => {
+export const List = ({courses, activeCourse}: Props) => {
     const router = useRouter();
     const [pending, startTransition] = useTransition();
     const onClick = (id: number) => {
         if (pending) return;
-        if (id === activeCourseId){
+        if (id === activeCourse){
             return router.push("/learn");
         }
         startTransition(() =>{
@@ -32,7 +32,7 @@ export const List = ({courses, activeCourseId}: Props) => {
                 imageSrc={course.imageSrc}
                 onClick={onClick}
                 disabled={pending}
-                active={course.id === activeCourseId}
+                active={course.id === activeCourse}
                 />
             ))}
         </div>

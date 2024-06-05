@@ -30,7 +30,7 @@ const Cources = async () => {
             </div>
             <List
             courses={courses}
-            activeCourseId={userProgress?.activeCourseId}
+            activeCourse={userProgress?.activeCourse}
             />
             
         </section>

@@ -32,12 +32,12 @@ export const getUser = async () => {
 export const getUnits = cache(async () => {
     const {userId} = await auth();
     const userProgress = await getUserProgress();
-    if (!userId || !userProgress?.activeCourseId){
+    if (!userId || !userProgress?.activeCourse){
         return []
     }
     const data = await db.query.units.findMany({
         orderBy: (units, {asc}) => [asc(units.order)],
-        where: eq(units.courseId, userProgress.activeCourseId),
+        where: eq(units.courseId, userProgress.activeCourse),
         with:{
             lessons:{
                 orderBy: (lessons,{asc})=>[asc(lessons.order)],
@@ -97,12 +97,12 @@ export const getCourseById = cache(async  (courseId: number) => {
 export const getCourseProgress = cache(async () => {
     const {userId} = await auth();
     const userProgress = await getUserProgress();
-    if (!userId || !userProgress?.activeCourseId){
+    if (!userId || !userProgress?.activeCourse){
         return null
     }
     const unitsInActiveCourse = await db.query.units.findMany({
         orderBy:(units, {asc}) => [asc(units.order)],
-        where: eq(units.courseId, userProgress.activeCourseId),
+        where: eq(units.courseId, userProgress.activeCourse),
         with: {
             lessons:{
                 orderBy: (lessons, {asc}) => [asc(lessons.order)],
