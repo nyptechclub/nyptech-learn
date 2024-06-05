@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
 import { Pencil } from "lucide-react"
@@ -13,22 +15,24 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 const formSchema = z.object({
-    title: z.string().min(1,{
-        message: "Title is required"
+    description: z.string().min(1,{
+        message: "Description is required"
     })
 })
 interface Props{
     initialData:{
-        title: string
+        description: string
     }
     courseId: string
 }
-const TitleForm = ({initialData, courseId}:Props) => {
+const DescriptionForm = ({initialData, courseId}:Props) => {
     const [isEditing, setisEditing] = useState(false)
     const toggleEdit = () => setisEditing((current) => !current)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData
+        defaultValues: {
+            description: initialData?.description || ""
+        }
     })
     const router = useRouter()
     const {isSubmitting, isValid} = form.formState
@@ -45,20 +49,22 @@ const TitleForm = ({initialData, courseId}:Props) => {
     return ( 
         <div className="mt-6 border rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course Title
+                Course Description
                 <Button variant="ghost" onClick={toggleEdit}>
                 {isEditing ? (
                     <div>
                     Cancel
                     </div>):(<>
                         <Pencil className="size-4 mr-2"/>
-                        Edit Title
+                        Edit Description
                     </>)}
                 </Button>
             </div>
             {!isEditing && (
-                <p className="text-sm mt-2">
-                    {initialData.title}
+                <p className={cn("text-sm mt-2",
+                    !initialData.description && "italic"
+                )}>
+                    {initialData.description || "No Description"}
                 </p>
             )}
             {isEditing && (
@@ -68,11 +74,11 @@ const TitleForm = ({initialData, courseId}:Props) => {
                     className="space-y-4 mt-4">
                         <FormField
                         control={form.control}
-                        name="title"
+                        name="description"
                         render={({field})=> (
                             <FormItem>
                             <FormControl>
-                            <Input
+                            <Textarea
                             disabled={isSubmitting}
                             placeholder="NYP but free and more budget"{
                                 ...field
@@ -95,4 +101,4 @@ const TitleForm = ({initialData, courseId}:Props) => {
      );
 }
  
-export default TitleForm;
+export default DescriptionForm;

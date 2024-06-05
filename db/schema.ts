@@ -98,7 +98,7 @@ export const userProgress = pgTable("user_progress", {
   userId: text("user_id").primaryKey(),
   userName: text("user_name").notNull().default("User"),
   userImageSrc: text("user_image_src").notNull().default("/mascot.svg"),
-  activeCourseId: integer("active_course_id").references(() => courses.id, { onDelete: "cascade" }),
+  activeCourse: integer("active_course_id").references(() => courses.id, { onDelete: "cascade" }),
   hearts: integer("hearts").notNull().default(5),
   maxhearts: integer("maxhearts").notNull().default(5),
   points: integer("points").notNull().default(0),
@@ -107,7 +107,7 @@ export const userProgress = pgTable("user_progress", {
 
 export const userProgressRelations = relations(userProgress, ({ one }) => ({
   activeCourse: one(courses, {
-    fields: [userProgress.activeCourseId],
+    fields: [userProgress.activeCourse],
     references: [courses.id],
   }),
 }));
@@ -123,11 +123,11 @@ export const cCourses = pgTable("cCourses", {
   id: text("id").primaryKey().default(createId()),
   title: text("title"),
   userId: text("userId"),
-  imageSrc: text("image_src"),
+  imageSrc: text("imageSrc"),
   description: text("description"),
   isPublished: boolean("is_published").default(false),
   categoryId: text("category_id").references(() => categories.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow()
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const cCoursesRelations = relations(cCourses, ({ many, one }) => ({
@@ -136,8 +136,9 @@ export const cCoursesRelations = relations(cCourses, ({ many, one }) => ({
   attachments: many(attachments),
   category: one(categories, {
     fields: [cCourses.categoryId],
-    references: [categories.id]
-  })
+    references: [categories.id],
+  }),
+  chapters: many(chapters),
 }));
 
 export const categories = pgTable("categories", {
@@ -146,7 +147,7 @@ export const categories = pgTable("categories", {
 });
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
-  courses: many(cCourses)
+  courses: many(cCourses),
 }));
 
 export const attachments = pgTable("attachments", {
@@ -154,12 +155,61 @@ export const attachments = pgTable("attachments", {
   name: text("name"),
   url: text("url"),
   courseId: text("course_id").references(() => cCourses.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").defaultNow()
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const attachmentsRelations = relations(attachments, ({ one }) => ({
   course: one(cCourses, {
     fields: [attachments.courseId],
     references: [cCourses.id],
-  })
+  }),
+}));
+
+export const chapters = pgTable("chapters", {
+  id: text("id").primaryKey().default(createId()),
+  title: text("title"),
+  description: text("description"),
+  videoUrl: text("video_url"),
+  position: integer("position"),
+  isPublished: boolean("is_published").default(false),
+  courseId: text("course_id").references(() => cCourses.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const chaptersRelations = relations(chapters, ({ one, many }) => ({
+  course: one(cCourses, {
+    fields: [chapters.courseId],
+    references: [cCourses.id],
+  }),
+  muxData: many(muxData),
+  cuserProgress: many(cuserProgress),
+}));
+
+export const muxData = pgTable("mux_data", {
+  id: text("id").primaryKey().default(createId()),
+  assetId: text("asset_id"),
+  playbackId: text("playback_id"),
+  chapterId: text("chapter_id").references(() => chapters.id, { onDelete: "cascade" }).unique(),
+});
+
+export const muxDataRelations = relations(muxData, ({ one }) => ({
+  chapter: one(chapters, {
+    fields: [muxData.chapterId],
+    references: [chapters.id],
+  }),
+}));
+
+export const cuserProgress = pgTable("cuserprogress", {
+  id: text("id").primaryKey().default(createId()),
+  userId: text("user_id").unique(),
+  chapterId: text("chapter_id").unique(),
+  isCompleted: boolean("is_completed").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const cuserProgressRelations = relations(cuserProgress, ({ one }) => ({
+  chapter: one(chapters, {
+    fields: [cuserProgress.chapterId],
+    references: [chapters.id],
+  }),
 }));

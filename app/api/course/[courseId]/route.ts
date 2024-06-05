@@ -17,13 +17,14 @@ export async function PATCH(
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const course = await db.update(cCourses)
+        const updatedCourse = await db.update(cCourses)
             .set(values)
-            .where(eq(cCourses.id, courseId));
+            .where(eq(cCourses.id, courseId))
+            .returning();
 
-        return new NextResponse(JSON.stringify(course), { status: 200 });
+        return new NextResponse(JSON.stringify(updatedCourse), { status: 200 });
     } catch (error) {
-        console.log("API/course/courseId", error);
+        console.error("API/course/courseId", error);
         return new NextResponse("Internal API error", { status: 500 });
     }
 }

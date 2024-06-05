@@ -1,11 +1,16 @@
+//@ts-nocheck
 import { IconBadge } from "@/components/general/icon-badge";
 import db from "@/db/drizzle";
-import { cCourses } from "@/db/schema";
+import { attachments, cCourses, categories } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
-import { LayoutDashboardIcon } from "lucide-react";
+import { File, LayoutDashboardIcon, ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "./titleform";
+import DescriptionForm from "./descriptionform";
+import ImageForm from "./imageform";
+import CategoryForm from "./categoryform";
+import Attachment from "./attachment";
 
 const CourseIdPage = async({
     params
@@ -16,11 +21,15 @@ const CourseIdPage = async({
     if (!userId) {
         return redirect("/");
     }
-    
+    const category = await db.query.categories.findMany()
     const course = await db.query.cCourses.findFirst({
-        where: eq(cCourses.id, params.courseId)
-    });
-    
+        where: eq(cCourses.id, params.courseId),
+        with: {
+          attachments: {
+            orderBy: (attachments, { desc }) => [desc(attachments.createdAt)],
+          },
+        },
+      });
     if (!course) {
         return redirect("/lesson");
     }
@@ -67,6 +76,50 @@ const CourseIdPage = async({
                     initialData={sanitizedCourse}
                     courseId={course.id}
                 />
+                <DescriptionForm
+                    initialData={sanitizedCourse}
+                    courseId={course.id}
+                />
+                <ImageForm
+                    initialData={sanitizedCourse}
+                    courseId={course.id}
+                />
+                <CategoryForm
+                    initialData={sanitizedCourse}
+                    courseId={course.id}
+                    options={category.map((category) => ({
+                       label: category.name,
+                       value: category.id 
+                    }))}
+                />
+            </div>
+            <div className="space-y-6">
+                <div>
+                <div className="flex items-center gap-x-2">
+                    <IconBadge icon={ListChecks}/>
+                    <h2 className="text-xl">
+                        Course Chapters
+                    </h2>
+                </div>
+                <div>
+                    Chep
+                </div>
+                </div>
+                <div>
+                <div className="flex items-center gap-x-2">
+                    <IconBadge icon={File}/>
+                    <h2 className="text-xl">
+                        Resources and  Attachements
+                    </h2>
+                </div>
+                <div>
+                    Course related materials
+                    <Attachment
+                    initialData={sanitizedCourse}
+                    courseId={course.id}
+                    />
+                </div>
+                </div>
             </div>
         </div>
     );
