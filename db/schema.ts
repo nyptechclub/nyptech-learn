@@ -170,7 +170,7 @@ export const chapters = pgTable("chapters", {
   title: text("title"),
   description: text("description"),
   videoUrl: text("video_url"),
-  position: integer("position"),
+  position: integer("position").notNull(),
   isPublished: boolean("is_published").default(false),
   courseId: text("course_id").references(() => cCourses.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow(),

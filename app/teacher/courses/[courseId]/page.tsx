@@ -11,6 +11,7 @@ import DescriptionForm from "./descriptionform";
 import ImageForm from "./imageform";
 import CategoryForm from "./categoryform";
 import Attachment from "./attachment";
+import Chapters from "./chapters";
 
 const CourseIdPage = async({
     params
@@ -28,6 +29,9 @@ const CourseIdPage = async({
           attachments: {
             orderBy: (attachments, { desc }) => [desc(attachments.createdAt)],
           },
+          chapters:{
+            orderBy: (chapters, { asc }) => [asc(chapters.position)],
+          },
         },
       });
     if (!course) {
@@ -38,7 +42,8 @@ const CourseIdPage = async({
         course.title,
         course.description,
         course.imageSrc,
-        course.categoryId
+        course.categoryId,
+        course.chapters.some(chapter => chapter.isPublished)
     ];
     
     const totalFields = requiredFields.length;
@@ -102,7 +107,10 @@ const CourseIdPage = async({
                     </h2>
                 </div>
                 <div>
-                    Chep
+                <Chapters
+                    initialData={sanitizedCourse}
+                    courseId={course.id}
+                />
                 </div>
                 </div>
                 <div>
