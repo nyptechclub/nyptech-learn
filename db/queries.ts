@@ -3,6 +3,7 @@ import db from "@/db/drizzle";
 import { auth } from "@clerk/nextjs/server";
 import { challengeOptions, challengeProgress, challenges, courses, lessons, units, userProgress, userSubcription } from "./schema";
 import { asc, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 export const getUserProgress = cache(async () => {
     const { userId } = await auth();
     if (!userId) {
@@ -37,7 +38,7 @@ export const getUnits = cache(async () => {
     }
     const data = await db.query.units.findMany({
         orderBy: (units, {asc}) => [asc(units.order)],
-        where: eq(units.courseId, userProgress.activeCourse),
+        where: eq(units.courseId, userProgress.activeCourse.id),
         with:{
             lessons:{
                 orderBy: (lessons,{asc})=>[asc(lessons.order)],
@@ -98,11 +99,11 @@ export const getCourseProgress = cache(async () => {
     const {userId} = await auth();
     const userProgress = await getUserProgress();
     if (!userId || !userProgress?.activeCourse){
-        return null
+        return redirect("/")
     }
     const unitsInActiveCourse = await db.query.units.findMany({
         orderBy:(units, {asc}) => [asc(units.order)],
-        where: eq(units.courseId, userProgress.activeCourse),
+        where: eq(units.courseId, userProgress.activeCourse.id),
         with: {
             lessons:{
                 orderBy: (lessons, {asc}) => [asc(lessons.order)],
