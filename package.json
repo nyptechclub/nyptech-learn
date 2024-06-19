@@ -16,6 +16,7 @@
   "dependencies": {
     "@canva/design": "^1.8.0",
     "@clerk/nextjs": "^5.0.3",
+    "@hello-pangea/dnd": "^16.6.0",
     "@hookform/resolvers": "^3.4.2",
     "@neondatabase/serverless": "^0.9.1",
     "@paralleldrive/cuid2": "^2.2.2",

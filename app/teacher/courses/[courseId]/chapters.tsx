@@ -8,7 +8,7 @@ import { cCourses, chapters } from "@/db/schema"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
-import { Pencil, PlusCircle } from "lucide-react"
+import { Loader2, Pencil, PlusCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
@@ -49,8 +49,27 @@ const Chapters = ({initialData, courseId}:Props) => {
             toast.error("Error adding chapter, please try again.")
         }
     }
+    const reorderchapter = async (updateData: {id: string; position:number}[]) =>{
+        try{
+            setisUpdateing(true)
+            await axios.put(`/api/course/${courseId}/chapters/reorder`, {
+                list: updateData
+            })
+            toast.success("Chapters reordered")
+            router.refresh()
+        }catch(error: any){
+            console.log(error)
+            toast.error("Could not reorder")
+        }finally{
+            setisUpdateing(false)
+        }
+    }
+    const editchapter = (id: string) => {
+        router.push(`/teacher/course/${courseId}/chapters/${id}`)
+    }
     return ( 
         <div className="mt-6 border rounded-md p-4">
+            
             <div className="font-medium flex items-center justify-between">
                 Course Chapters
                 <Button variant="ghost" onClick={toggleCreating}>
@@ -96,11 +115,11 @@ const Chapters = ({initialData, courseId}:Props) => {
                     !initialData.chapters.length && "italic"
                 )}>
                     {!initialData.chapters.length && "No Chapters"}
-                    {/* <ChapterList
-                    onEdit={() => {}}
-                    onReorder={()=> {}}
+                    <ChapterList
+                    onEdit={editchapter}
+                    onReorder={reorderchapter}
                     items={initialData.chapters || []}
-                    /> */}
+                    />
                 </div>
             )}
             {!isCreating && (
