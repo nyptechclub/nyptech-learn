@@ -2,55 +2,57 @@
 
 import FileUpload from "@/components/file-upload";
 import { Button } from "@/components/ui/button";
+import { muxData } from "@/db/schema";
 import axios from "axios";
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
-import Image from "next/image";
+import { ImageIcon, Pencil, PlusCircle, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 
 const formSchema = z.object({
-    imageSrc: z.string().min(1, {
-        message: "Image is required",
+    videoUrl: z.string().min(1, {
+        message: "Video is required",
     }),
 });
 
 interface Props {
     initialData: {
-        imageSrc: string;
+        videoUrl: string;
+        muxData?: typeof muxData | null
     };
     courseId: string;
+    chapterId: string
 }
 
-const ImageForm = ({ initialData, courseId }: Props) => {
+const VideoForm = ({ initialData, courseId, chapterId }: Props) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [imageUrl, setImageUrl] = useState(initialData.imageSrc);
+    const [imageUrl, setImageUrl] = useState(initialData.videoUrl);
     const router = useRouter();
     const toggleEdit = () => setIsEditing((current) => !current);
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
-            await axios.patch(`/api/course/${courseId}`, values);
+            await axios.patch(`/api/course/${courseId}/chapters/${chapterId}`, values);
             toast.success("Course updated");
-            setImageUrl(values.imageSrc); // Update local state with new image URL
+            setImageUrl(values.videoUrl); // Update local state with new image URL
             toggleEdit();
             router.refresh();
         } catch {
-            toast.error("Error adding image, please try again.");
+            toast.error("Error adding video, please try again.");
         }
     };
 
     return (
         <div className="mt-6 border rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
-                Course Image
+                Video
                 <Button variant="ghost" onClick={toggleEdit}>
                     {isEditing && <div>Cancel</div>}
                     {!isEditing  && (
                         <>
                             <PlusCircle className="size-4 mr-2" />
-                            Add a file
+                            Change Video
                         </>
                     )}
                 </Button>
@@ -58,31 +60,26 @@ const ImageForm = ({ initialData, courseId }: Props) => {
             {!isEditing && (
                 !imageUrl ? (
                     <div className="flex items-center justify-center h-60 rounded-md">
-                        <ImageIcon className="size-10" />
+                        <Video className="size-10" />
                     </div>
                 ) : (
                     <div className="relative aspect-video mt-2">
-                        <Image
-                            alt="Upload"
-                            fill
-                            className="object-cover rounded-md"
-                            src={imageUrl}
-                        />
+                        <video src={initialData.videoUrl} controls/>
                     </div>
                 )
             )}
             {isEditing && (
                 <div>
                     <FileUpload
-                        endpoint="courseImage"
+                        endpoint="chapterVideo"
                         onChange={(url) => {
                             if (url) {
-                                onSubmit({ imageSrc: url });
+                                onSubmit({ videoUrl: url });
                             }
                         }}
                     />
                     <div className="text-xs mt-4">
-                        16:9 aspect ratio recommended
+                        upload chapter video
                     </div>
                 </div>
             )}
@@ -90,4 +87,4 @@ const ImageForm = ({ initialData, courseId }: Props) => {
     );
 };
 
-export default ImageForm;
+export default VideoForm;

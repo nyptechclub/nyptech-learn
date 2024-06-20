@@ -65,7 +65,7 @@ const Chapters = ({initialData, courseId}:Props) => {
         }
     }
     const editchapter = (id: string) => {
-        router.push(`/teacher/course/${courseId}/chapters/${id}`)
+        router.push(`/teacher/courses/${courseId}/chapters/${id}`)
     }
     return ( 
         <div className="mt-6 border rounded-md p-4">
