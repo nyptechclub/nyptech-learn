@@ -23,14 +23,13 @@ const Courses = async () => {
     where: eq(cCourses.isPublished, true),
   });
 
-  console.log("Filtered courses:", listcourse);
-
   return (
     <CoursesClient
       courses={courses}
       userProgress={userProgress}
       categories={categories}
       listcourse={listcourse}
+      userId={userId}
     />
   );
 };

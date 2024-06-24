@@ -179,7 +179,7 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
                 <div className="card-body">
                 {challenge && challenge.lesson && 
   <Link href={challenge.lesson}>
-    <Button>Go to lesson</Button>
+    <Button className="btn">Go to lesson</Button>
   </Link>
 }
 

@@ -2,7 +2,7 @@ import ExitModal from '@/components/modals/exit-modal';
 import './globals.css';
 import { Button } from "@/components/ui/button";
 import { ClerkLoaded, ClerkLoading, ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { BookCheck, Home, Loader, Menu, Settings2, ShoppingCart, Sword, Trophy } from "lucide-react";
+import { BookCheck, BookOpen, Home, Loader, Menu, Settings2, ShoppingCart, Sword, Trophy } from "lucide-react";
 import Link from 'next/link';
 import { Toaster } from "@/components/ui/sonner"
 import HeartsModal from '@/components/modals/hearts-modal';
@@ -76,6 +76,7 @@ value={self?.theme ?? "cupcake"}
               <ul className="menu p-4 w-80 min-h-full bg-accent-content gap-4">
               <li ><Link href="/" className="btn btn-accent"><Home/>Home</Link></li>
                 <li><Link href="/learn" className="btn btn-accent"><BookCheck/>Learn</Link></li>
+                <li><Link href="/courses" className="btn btn-accent"><BookOpen/>All Courses</Link></li>
                 <li><Link href="/leaderboard" className="btn btn-accent"><Trophy />Leaderboard</Link></li>
                 <li><Link href="/quests" className="btn btn-accent"><Sword/>Quests</Link></li>
                 <li><Link href="/shop" className="btn btn-accent"><ShoppingCart />Shop</Link></li> 

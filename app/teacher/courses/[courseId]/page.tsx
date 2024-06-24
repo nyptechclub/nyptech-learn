@@ -13,7 +13,7 @@ import CategoryForm from "./categoryform";
 import Attachment from "./attachment";
 import Chapters from "./chapters";
 import { Banner } from "@/components/banner";
-import { CourseActions } from "./ChapterActions";
+import { CourseActions } from "./CourseActions";
 
 const CourseIdPage = async({
     params

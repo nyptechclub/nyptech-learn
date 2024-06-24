@@ -5,15 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { List } from "./list";
+import Link from "next/link";
 
 interface Props {
   courses: any[];
   userProgress: any;
   categories: any[];
   listcourse: any[];
+  userId: string
 }
 
-const CoursesClient = ({ courses, userProgress, categories, listcourse }: Props) => {
+const CoursesClient = ({ courses, userProgress, categories, listcourse, userId }: Props) => {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredCourses, setFilteredCourses] = useState(listcourse);
@@ -51,33 +53,41 @@ const CoursesClient = ({ courses, userProgress, categories, listcourse }: Props)
       <div className="relative mb-5">
         <Search className="size-4 absolute top-3 left-3" />
         <Input
-          className="w-full pl-9 rounded-full focus-visible:ring-base-100"
+          className="pl-9 input"
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
       </div>
       <div className="flex gap-2 mb-4">
         {categories.map((item: any) => (
-          <Button key={item.id} onClick={() => setSelectedCategory(item.id)}>
+          <Button key={item.id} onClick={() => setSelectedCategory(item.id)} >
             {item.name}
           </Button>
         ))}
-        <Button onClick={() => setSelectedCategory(null)}>All</Button>
+        <Button onClick={() => setSelectedCategory(null)} >All</Button>
       </div>
       <div className="pt-6 flex gap-4 flex-wrap items-center">
         {filteredCourses.map((item: any) => (
-          <div
-            className="h-full border-2 rounded-xl border-b-4 cursor-pointer active:border-b-2 flex flex-col items-center justify-between p-3 pb-6 min-h-[217px] min-w-[180px] max-w-[200]"
-            key={item.id}
-          >
-            <img
-              src={item.imageSrc}
-              width={200}
-              className="rounded-lg drop-shadow-md border object-cover"
-            />
-            <p className="text-center font-bold mt-3">
-              {item.title}
-            </p>
+          <div key={item.id}>
+            <Link href={`/learn/${item.id}`}
+              className="h-full border-2 rounded-xl border-b-4 cursor-pointer active:border-b-2 flex flex-col items-center justify-between p-3 pb-6 min-h-[217px] min-w-[180px] max-w-[200]"
+              
+            >
+              <img
+                src={item.imageSrc}
+                width={200}
+                className="rounded-lg drop-shadow-md border object-cover"
+              />
+              <p className="text-center font-bold mt-3">
+                {item.title}
+              </p>
+
+            </Link>
+            {item.userId === userId && (
+              <Link href={`/teacher/courses/${item.id}`} className="btn">
+                Edit
+              </Link>
+            )}
           </div>
         ))}
       </div>

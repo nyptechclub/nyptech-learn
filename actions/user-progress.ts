@@ -15,12 +15,15 @@ export const upsertUserProgress = async (courseId: number) => {
     throw new Error("Unauthorized") && redirect("/")
   }
   const course = await getCourseById(courseId);
+
   if (!course) {
     throw new Error("Course Not Found") && redirect("/")
   }
+
   if (!course.units.length || !course.units[0].lessons.length){
     throw new Error("course is empty") && redirect("/")
   }
+
   const existingUserProgress = await getUserProgress();
   if (existingUserProgress) {
     await db.update(userProgress).set({
@@ -32,6 +35,7 @@ export const upsertUserProgress = async (courseId: number) => {
     revalidatePath("/learn");
     redirect("/learn");
   }
+
   await db.insert(userProgress).values({
     userId,
     activeCourse: courseId,
@@ -42,6 +46,10 @@ export const upsertUserProgress = async (courseId: number) => {
   revalidatePath("/learn");
   redirect("/learn");
 };
+
+
+
+
 export const reduceHearts = async (challengeId: number) => {
   const { userId } = await auth();
   if (!userId) {
@@ -85,6 +93,10 @@ export const reduceHearts = async (challengeId: number) => {
   revalidatePath("/shop")
   revalidatePath(`/lesson/${lessonId}`)
 };
+
+
+
+
 export const refillHearts = async() => {
   const currentUserProgress = await getUserProgress()
   if (!currentUserProgress){
@@ -105,6 +117,11 @@ export const refillHearts = async() => {
   revalidatePath("/quests")
   revalidatePath("/leaderboard")
 }
+
+
+
+
+
 export const updatetheme = async (values: string) => {
   const currentUserProgress = await getUserProgress()
   if (!currentUserProgress){
@@ -120,7 +137,4 @@ export const updatetheme = async (values: string) => {
 }
 //todo: set price to a variable in db
 //add more courses
-//add a normal learning module (teach content)
-//add more to the story
 //all ids in admin.ts
-//tell model not login

@@ -40,7 +40,7 @@ export const Footer = ({ onCheck, status, disabled, lessonId
                 )}
                 <Button
                     disabled={disabled}
-                    className="ml-auto btn btn-accent"
+                    className="ml-auto btn-accent"
                     onClick={onCheck}
                     size={isMobile ? "sm" : "lg"}
                     variant={status === "wrong" ? "destructive" : "secondary"}>

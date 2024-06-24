@@ -38,12 +38,12 @@ export const LessonButton = ({ id, index, total, locked, current, percent }: Pro
                                 stroke: "#e5e7eb"
                             }
                         }}>
-                        <Button variant={locked ? "locked" : "secondary"} className="btn btn-circle btn-lg drop-shadow-md border-b-4 cursor-pointer active:border-b-2">
+                        <Button variant={locked ? "locked" : "secondary"} className="btn-circle btn-lg drop-shadow-md border-b-4 cursor-pointer active:border-b-2">
                             <Icon className={cn(locked ? "fill-neutral-400 text-neutral-400 stroke-neutral-400" : "fill-primary-foreground text-primary", isCompleted && "fill-none stroke-[4]")} />
                         </Button>
                     </CircularProgressbarWithChildren>
                 </div>) : (
-                    <Button variant={locked ? "locked" : "secondary"} className="btn btn-circle btn-lg drop-shadow-md border-b-4 cursor-pointer active:border-b-2">
+                    <Button variant={locked ? "locked" : "secondary"} className="btn-circle btn-lg drop-shadow-md border-b-4 cursor-pointer active:border-b-2">
                         <Icon className={cn(locked ? "fill-neutral-400 text-neutral-400 stroke-neutral-400" : "fill-primary-foreground text-primary", isCompleted && "fill-none stroke-[4]")} />
                     </Button>
                 )}
