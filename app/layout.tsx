@@ -62,7 +62,7 @@ value={self?.theme ?? "cupcake"}
                 </div>
               </div>
               
-              <main className="flex container flex-col ">
+              <main className="flex flex-col ">
               <Toaster />
                 <ExitModal/>
                 <HeartsModal/>

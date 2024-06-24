@@ -1,5 +1,4 @@
 import db from "@/db/drizzle";
-import { chapters, muxData } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
@@ -9,6 +8,8 @@ import { IconBadge } from "@/components/general/icon-badge";
 import ChapterTitleForm from "./titleform";
 import ChapterDescriptionForm from "./descriptionform";
 import VideoForm from "./video";
+import { Banner } from "@/components/banner";
+import { ChapterActions } from "./ChapterActions";
 
 const ChapterIdPage = async ({
   params,
@@ -21,8 +22,9 @@ const ChapterIdPage = async ({
   }
 
   const chapter = await db.query.chapters.findFirst({
-    where: (chapters, { and }) =>
-      and(eq(chapters.id, params.chapterId), eq(chapters.courseId, params.courseId)),
+    where: (chapters, { and }) =>and(
+        eq(chapters.id, params.chapterId), 
+        eq(chapters.courseId, params.courseId)),
     with: {
       muxData: true,
     },
@@ -39,8 +41,15 @@ const ChapterIdPage = async ({
   ];
   const total = RequiredFields.length;
   const completed = RequiredFields.filter(Boolean).length;
-
+  const completetion = `(${completed}/${total})`
+  const isComplete = RequiredFields.every(Boolean)
   return (
+    <>
+    {!chapter.isPublished && (
+      <Banner
+      variant="warning"
+      label="This chapter is not published"/>
+    )}
     <div className="p-6">
       <div className="flex items-center justify-between">
         <div className="w-full">
@@ -56,9 +65,14 @@ const ChapterIdPage = async ({
                 Chapter Creation
               </h1>
               <span className="text-sm">
-                Complete all fields {completed}
+                Complete all fields {completetion}
               </span>
             </div>
+            <ChapterActions
+            disabled={!isComplete}
+            courseId={params.courseId}
+            chapterId={params.chapterId}
+            isPublished={chapter.isPublished}/>
           </div>
         </div>
       </div>
@@ -101,6 +115,7 @@ const ChapterIdPage = async ({
         </div>
       </div>
     </div>
+    </>
   );
 };
 

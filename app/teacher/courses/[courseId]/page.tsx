@@ -3,7 +3,7 @@ import { IconBadge } from "@/components/general/icon-badge";
 import db from "@/db/drizzle";
 import { attachments, cCourses, categories } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { eq, param } from "drizzle-orm";
 import { File, LayoutDashboardIcon, ListChecks } from "lucide-react";
 import { redirect } from "next/navigation";
 import TitleForm from "./titleform";
@@ -12,6 +12,8 @@ import ImageForm from "./imageform";
 import CategoryForm from "./categoryform";
 import Attachment from "./attachment";
 import Chapters from "./chapters";
+import { Banner } from "@/components/banner";
+import { CourseActions } from "./ChapterActions";
 
 const CourseIdPage = async({
     params
@@ -57,8 +59,13 @@ const CourseIdPage = async({
         imageSrc: course.imageSrc ?? "",
         categoryId: course.categoryId ?? ""
     };
-
+    const iscomplete = requiredFields.every(Boolean)
     return ( 
+        <>
+        {!course.isPublished && (
+            <Banner
+            label="This course is unplished, it is currently not visible."/>
+        )}
         <div className="p-6">
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-y-2">
@@ -69,6 +76,10 @@ const CourseIdPage = async({
                         Complete all fields {completionText}
                     </span>
                 </div>
+                <CourseActions
+                disabled={!iscomplete}
+                courseId={params.courseId}
+                isPublished={course.isPublished}/>
             </div>
             <div className="grid gap-6 mt-16">
                 <div className="flex items-center gap-x-2">
@@ -130,6 +141,7 @@ const CourseIdPage = async({
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

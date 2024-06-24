@@ -123,6 +123,7 @@ export const cCourses = pgTable("cCourses", {
   id: text("id").primaryKey().default(createId()),
   title: text("title"),
   userId: text("userId"),
+  // To validate the user
   imageSrc: text("imageSrc"),
   description: text("description"),
   isPublished: boolean("is_published").default(false),

@@ -1,7 +1,7 @@
 import db from "@/db/drizzle";
 import { cCourses } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -28,3 +28,29 @@ export async function PATCH(
         return new NextResponse("Internal API error", { status: 500 });
     }
 }
+export async function DELETE(
+    req: Request,
+    { params }: { params: { courseId: string; } }
+  ) {
+    try {
+      const { userId } = auth();
+      if (!userId) {
+        return new NextResponse("Unauthorized", { status: 401 });
+      }
+      const chapter = await db.query.cCourses.findFirst({
+        where: and(
+          eq(cCourses.id, params.courseId)
+        ),
+      });
+      if (!chapter) {
+        return new NextResponse("Not Found", { status: 404 });
+      }
+      const deleted = await db
+        .delete(cCourses)
+        .where(eq(cCourses.id, params.courseId));
+      return NextResponse.json(deleted);
+    } catch (error) {
+      console.log("/api/course-delete", error);
+      return new NextResponse("Cannot edit chapter", { status: 500 });
+    }
+  }

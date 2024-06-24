@@ -17,7 +17,6 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    // Retrieve the last chapter to determine the new position
     const lastChapter = await db.query.chapters.findFirst({
       where: eq(chapters.courseId, params.courseId),
       orderBy: (chapters, { desc }) => [desc(chapters.position)],
@@ -28,7 +27,6 @@ export async function POST(
     // Generate a unique ID for the new chapter
     const newId = createId();
 
-    // Insert the new chapter and handle potential duplicate key errors
     try {
       const newChapter = await db.insert(chapters).values({
         id: newId,
@@ -43,7 +41,8 @@ export async function POST(
       if (insertError instanceof Error && insertError.message.includes('duplicate key value violates unique constraint')) {
         return new NextResponse("Duplicate key error", { status: 409 });
       }
-      throw insertError; // Rethrow if it's a different error
+      throw insertError;
+      // Rethrow if it's a different error
     }
   } catch (error) {
     console.error("[Chapters]", error);

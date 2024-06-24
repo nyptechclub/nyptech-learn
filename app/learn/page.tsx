@@ -8,6 +8,7 @@ import { Units } from "./units";
 import { lessons, units as unitsSchema, userSubcription } from "@/db/schema";
 import Promo from "@/components/general/promo";
 import Quests from "@/components/general/Quests";
+import db from "@/db/drizzle";
 
 const Learn = async () => {
     const userProgressData = getUserProgress();
@@ -24,6 +25,7 @@ const Learn = async () => {
     if (!courseProgress) {
         redirect("/courses")
     }
+
     return (
         <section className="min-h-screen ">
             <Feedwrapper>
@@ -35,7 +37,7 @@ const Learn = async () => {
                             <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary">Progress</label>
                         </div>
 
-                        {units.map((unit) => (
+                        {units.map((unit: any) => (
                             <Units
                                 key={unit.id}
                                 id={unit.id}
@@ -49,6 +51,7 @@ const Learn = async () => {
                                 activeLessonPercent={lessonpercent}
                             />
                         ))}
+
 
                     </div>
 
