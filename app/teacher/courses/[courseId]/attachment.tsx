@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { attachments } from "@/db/schema";
 import axios from "axios";
 import { File, ImageIcon, Loader2, Pencil, PlusCircle, X } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

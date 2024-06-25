@@ -2,9 +2,8 @@
 
 import FileUpload from "@/components/file-upload";
 import { Button } from "@/components/ui/button";
-import { muxData } from "@/db/schema";
 import axios from "axios";
-import { ImageIcon, Pencil, PlusCircle, Video } from "lucide-react";
+import { PlusCircle, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -19,7 +18,6 @@ const formSchema = z.object({
 interface Props {
     initialData: {
         videoUrl: string;
-        muxData?: typeof muxData | null
     };
     courseId: string;
     chapterId: string

@@ -1,8 +1,9 @@
+// Queries for quiz
 import { cache, use } from "react";
 import db from "@/db/drizzle";
 import { auth } from "@clerk/nextjs/server";
-import { challengeOptions, challengeProgress, challenges, courses, lessons, units, userProgress, userSubcription } from "./schema";
-import { asc, eq } from "drizzle-orm";
+import { challengeProgress, courses, lessons, units, userProgress, userSubcription } from "./schema";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 export const getUserProgress = cache(async () => {
     const { userId } = await auth();

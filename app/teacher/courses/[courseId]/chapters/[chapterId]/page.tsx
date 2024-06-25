@@ -25,9 +25,6 @@ const ChapterIdPage = async ({
     where: (chapters, { and }) =>and(
         eq(chapters.id, params.chapterId), 
         eq(chapters.courseId, params.courseId)),
-    with: {
-      muxData: true,
-    },
   });
 
   if (!chapter) {

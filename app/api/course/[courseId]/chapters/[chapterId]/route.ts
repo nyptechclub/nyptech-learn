@@ -1,7 +1,7 @@
 import db from "@/db/drizzle";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { cCourses, chapters, muxData } from "@/db/schema";
+import { cCourses, chapters } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 
 export async function DELETE(
@@ -22,16 +22,7 @@ export async function DELETE(
     if (!chapter) {
       return new NextResponse("Not Found", { status: 404 });
     }
-    if (chapter.videoUrl) {
-      const existingData = await db.query.muxData.findFirst({
-        where: eq(muxData.chapterId, params.chapterId),
-      });
-      //Todo: remove muxData in schema and code completely if we are sure we dont want encondoing (uploathing does it by default)
 
-      if (existingData) {
-        await db.delete(muxData).where(eq(muxData.id, existingData.id));
-      }
-    }
     const deleted = await db
       .delete(chapters)
       .where(eq(chapters.id, params.chapterId));
@@ -83,11 +74,6 @@ export async function PATCH(
       return new NextResponse("Chapter not found", { status: 404 });
     }
 
-    if (values.videoUrl) {
-      const existingData = await db.query.muxData.findFirst({
-        where: eq(muxData.chapterId, params.chapterId),
-      });
-    }
 
     return new NextResponse("Chapter updated successfully", { status: 200 });
   } catch (error) {

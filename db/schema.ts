@@ -182,22 +182,7 @@ export const chaptersRelations = relations(chapters, ({ one, many }) => ({
     fields: [chapters.courseId],
     references: [cCourses.id],
   }),
-  muxData: many(muxData),
   cuserProgress: many(cuserProgress),
-}));
-
-export const muxData = pgTable("mux_data", {
-  id: text("id").primaryKey().default(createId()),
-  assetId: text("asset_id"),
-  playbackId: text("playback_id"),
-  chapterId: text("chapter_id").references(() => chapters.id, { onDelete: "cascade" }).unique(),
-});
-
-export const muxDataRelations = relations(muxData, ({ one }) => ({
-  chapter: one(chapters, {
-    fields: [muxData.chapterId],
-    references: [chapters.id],
-  }),
 }));
 
 export const cuserProgress = pgTable("cuserprogress", {
