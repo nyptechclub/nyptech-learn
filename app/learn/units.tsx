@@ -40,12 +40,13 @@ export const Units = ({ order, title, description, activeLesson, activeLessonPer
                     const isCurrent = lesson.id === activeLesson?.id;
                     const isLocked = !lesson.completed && !isCurrent;
                     return (
-                        <div className="gap-5 flex flex-col items-center">
+                        <div className="gap-5 flex flex-col items-center"
+                        key={lesson.id}
+>
                             <h1>
                             {lesson.title}
                             </h1>
                         <LessonButton
-                            key={lesson.id}
                             id={lesson.id}
                             index={index}
                             total={lessons.length - 1}
