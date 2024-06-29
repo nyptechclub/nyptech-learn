@@ -7,9 +7,7 @@ const AdminPage = () => {
         redirect("/learn")
     }
     return ( 
-        <section>
             <AdminApp/>
-        </section>
      );
 }
  

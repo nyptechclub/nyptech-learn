@@ -27,7 +27,7 @@ const Learn = async () => {
     }
 
     return (
-        <section className="min-h-screen ">
+        <section className="min-h-screen">
             <Feedwrapper>
                 <div className="drawer drawer-end">
                     <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -36,7 +36,7 @@ const Learn = async () => {
                             <Header title={userProgress.activeCourse.title} />
                             <label htmlFor="my-drawer-4" className="drawer-button btn btn-primary">Progress</label>
                         </div>
-
+                        
                         {units.map((unit: any) => (
                             <Units
                                 key={unit.id}
@@ -51,7 +51,6 @@ const Learn = async () => {
                                 activeLessonPercent={lessonpercent}
                             />
                         ))}
-
 
                     </div>
 

@@ -16,11 +16,16 @@ import { ChallengeEdit } from "./Challenge/edit"
 import { ChallengeOptionList } from "./ChallengeOption/list"
 import { ChallengeOptionCreate } from "./ChallengeOption/create"
 import { ChallengeOptionEdit } from "./ChallengeOption/edit"
+import Link from "next/link"
 const dataProvider = simpleRestProvider("/api")
 const AdminApp = () => {
     return (
         <div>
+            <Link href={"/learn"} className="btn">
+                Learn Page
+            </Link>
             <Admin dataProvider={dataProvider}>
+
                 <Resource
                     name="courses"
                     recordRepresentation="title"
@@ -45,7 +50,7 @@ const AdminApp = () => {
                     list={ChallengeList}
                     create={ChallengeCreate}
                     edit={ChallengeEdit} />
-                                <Resource
+                <Resource
                     name="challengeOptions"
                     recordRepresentation="options"
                     list={ChallengeOptionList}

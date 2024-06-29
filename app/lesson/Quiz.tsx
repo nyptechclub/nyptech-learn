@@ -1,6 +1,6 @@
 "use client"
 
-import { challengeOptions, challenges, userSubcription } from "@/db/schema";
+import { challengeOptions, challenges, lessons, userSubcription } from "@/db/schema";
 import { useState, useTransition } from "react";
 import { Header } from "./header";
 import { ChallengeOptionType } from "./ChallengeOptions";
@@ -9,7 +9,7 @@ import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { toast } from "sonner"
 import { reduceHearts } from "@/actions/user-progress";
 import { useAudio, useMount, useWindowSize } from "react-use";
-import { Coins, Heart } from "lucide-react";
+import { Coins, Heart, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import Confetti from "react-confetti"
@@ -148,7 +148,7 @@ export const Quiz = ({ lsnChallenges, lsnId, hearts, percent, userSubbed }: Prop
 
                         <div className="flex flex-row gap-4">
                             <Button variant={"gooeyRight"} className="btn btn-success">
-                                Coins Left: {challenges.length * 10} <Coins />
+                                Challenges Completed {challenges.length} <Trophy />
                             </Button>
                             <Button variant={"gooeyRight"} className="btn btn-error">
                                 Hearts Left: {hearts} <Heart />
