@@ -54,7 +54,7 @@ const CourseLayout = async ({ children, params }: Props) => {
     <h1 className="text-xl font-bold p-5">
     {course.title}
     </h1>
-    <div className="gap-5">
+    <div className="gap-5 flex w-56 flex-col">
     {chapter.map((item: any) =>
            ( <Link key={item.id} href={`/learn/${courseId}/${item.id}`} className="w-full btn-secondary btn">
             {item.title}
@@ -70,7 +70,7 @@ const CourseLayout = async ({ children, params }: Props) => {
     
 
     
-    <main className="h-full md:pl-8">
+    <main className="h-full m-5">
     {children}
     </main>
     </div>;

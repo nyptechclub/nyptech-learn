@@ -30,7 +30,7 @@ const CoursesClient = ({ courses, userProgress, categories, listcourse, userId }
 
   return (
     <section className="h-full max-w-[912px] px-3 mx-auto m-5">
-      <div className="text-2xl font-bold">All courses</div>
+      <div className="text-2xl font-bold m-5">All courses</div>
       <div className="flex items-center flex-col rounded-xl bg-base-200 m-5 p-5">
         Intrigued and bewildered, he began to wander through the town, seeking answers. The streets were lined with quaint pixelated buildings, their bright colors contrasting with the dark mystery of his situation. He approached a group of townsfolk gathered by a fountain.
         <br /><br />
@@ -49,7 +49,7 @@ const CoursesClient = ({ courses, userProgress, categories, listcourse, userId }
         courses={courses}
         activeCourse={userProgress?.activeCourse}
       />
-      <h1>Other Courses</h1>
+      <h1 className="m-5 font-bold text-xl">Other Courses</h1>
       <div className="relative mb-5">
         <Search className="size-4 absolute top-3 left-3" />
         <Input

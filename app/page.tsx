@@ -17,7 +17,7 @@ export default function Home() {
                 &quot;You are finally awake!&quot; As dawn broke over Pixeltown, the gentle hum of the bustling digital city filled the air. You wake up feeling groggy and disoriented, finding yourself lying on a cobblestone path. A boy loomed over you as if he has excited to see you. As you sat up, you noticed your attire: a deep purple wizard&apos;s robe adorned with shimmering silver runes. You raised his hands and saw 5 glowing chakras pulsating gently in your palms, a tangible measure of your life force. &quot;You dropped from the sky, we taught you were dead! Well I better be going now, the tournament is about to begin&quot; Before rush off into the distance. 
                 </div>
                 <img src="/boy.png" className="w-20 h-20" />
-                <Link href="/learn" className="btn btn-secondary animate-pulse">
+                <Link href="/courses" className="btn btn-secondary animate-pulse">
                     Learn Now
                 </Link>
             </div>

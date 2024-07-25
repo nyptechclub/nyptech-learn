@@ -8,6 +8,6 @@ title: string
 export const Header = ({title}: Props) => {
     return ( 
         <Link href="/courses"><Button variant="expandIcon" Icon={ArrowLeft} iconPlacement="left" className="text-2xl p-5 btn-link">
-        {title}</Button></Link>
+        Back to {title}</Button></Link>
     );
 }
