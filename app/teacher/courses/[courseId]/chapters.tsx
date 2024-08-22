@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { cCourses, chapters } from "@/db/schema"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
@@ -14,6 +13,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 import ChapterList from "./chapterlist"
+import { cCourses, chapters } from "@prisma/client"
 
 const formSchema = z.object({
     title: z.string().min(1,{
@@ -21,8 +21,8 @@ const formSchema = z.object({
     })
 })
 interface Props{
-    initialData: typeof cCourses & {
-        chapters: typeof chapters[]
+    initialData: cCourses & {
+        chapters: chapters[]
     }
     courseId: string
 }

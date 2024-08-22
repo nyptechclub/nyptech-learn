@@ -1,7 +1,7 @@
-import { units, lessons } from "@/db/schema";
 import { Notebook } from "lucide-react";
 import Link from "next/link";
 import { LessonButton } from "./LessonButton";
+import { lessons, units } from "@prisma/client";
 
 type Props = {
     id: number;
@@ -9,10 +9,10 @@ type Props = {
     title: string;
     description: string;
     activeLessonPercent: number;
-    activeLesson: typeof lessons.$inferSelect & {
-        unit: typeof units.$inferSelect;
+    activeLesson: lessons & {
+        unit: units;
     } | undefined;
-    lessons: (typeof lessons.$inferSelect & {
+    lessons: (lessons & {
         completed: boolean;
     })[];
 }

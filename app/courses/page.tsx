@@ -1,4 +1,4 @@
-import { getCourses, getUserProgress } from "@/db/queries";
+import { getCourses, getUserProgress } from "@/lib/queries";
 import { List } from "./list";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";

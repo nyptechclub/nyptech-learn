@@ -1,7 +1,7 @@
 "use server";
 
 import { POINTS } from "@/constants";
-import { getCourseById, getUserProgress, getUserSubscription } from "@/db/queries";
+import { getCourseById, getUserProgress, getUserSubscription } from "@/lib/queries";
 import { db } from "@/lib/db";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -121,7 +121,7 @@ export const refillHearts = async () => {
   }
 
   await db.user_progress.update({
-    where: { user_id: currentUserProgress.userId },
+    where: { user_id: currentUserProgress.user_id },
     data: {
       hearts: 5,
       points: currentUserProgress.points - POINTS,
@@ -141,7 +141,7 @@ export const updateTheme = async (values: string) => {
   }
 
   await db.user_progress.update({
-    where: { user_id: currentUserProgress.userId },
+    where: { user_id: currentUserProgress.user_id },
     data: {
       theme: values,
     },

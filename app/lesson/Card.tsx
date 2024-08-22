@@ -1,5 +1,5 @@
-import { challenges } from "@/db/schema"
 import { cn } from "@/lib/utils"
+import { challenges } from "@prisma/client"
 import { useCallback } from "react"
 import { useAudio, useKey } from  "react-use"
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
     status?: "correct" | "wrong" | "none"
     audioSrc: string | null
     disabled?:boolean
-    type: typeof challenges.$inferSelect["type"]
+    type: challenges["type"]
 }
 export const Card = ({
     id,

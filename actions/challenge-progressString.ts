@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserProgress } from "@/db/queries";
+import { getUserProgress } from "@/lib/queries";
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
@@ -29,5 +29,5 @@ export const upsertChallengeProgressString = async () => {
     revalidatePath("/learn");
     revalidatePath("/quests");
     revalidatePath("/leaderboard");
-    revalidatePath(`/lesson/${currentUserProgress.activeCourse?.id}`);
+    revalidatePath(`/lesson/${currentUserProgress.active_course_id}`);
 };

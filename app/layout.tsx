@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner"
 import HeartsModal from '@/components/modals/hearts-modal';
 import PracticeModal from '@/components/modals/practice-modal';
 import { currentUser } from '@clerk/nextjs/server';
-import { getUserProgress } from '@/db/queries';
+import { getUserProgress } from '@/lib/queries';
 const RootLayout = async({
   children,
 }: {

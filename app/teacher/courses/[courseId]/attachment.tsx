@@ -1,8 +1,9 @@
+//@ts-nocheck
 "use client";
 
 import FileUpload from "@/components/file-upload";
 import { Button } from "@/components/ui/button";
-import { attachments } from "@/db/schema";
+import { attachments } from "@prisma/client";
 import axios from "axios";
 import { File, ImageIcon, Loader2, Pencil, PlusCircle, X } from "lucide-react";
 import Link from "next/link";
@@ -20,7 +21,7 @@ const formSchema = z.object({
 interface Props {
     initialData: {
         imageSrc: string;
-        attachments: typeof attachments[]
+        attachments: attachments[]
     };
     courseId: string;
 }
@@ -81,8 +82,8 @@ const Attachment = ({ initialData, courseId }: Props) => {
                                     key={attachment.id.toString()}
                                     className="flex items-center p-3 w-full border rounded-md shadow-md">
                                     <File className="size-4 mr-2 flex-shrink-0"/>
-                                    <Link className="text-xs line-clamp-1 link" href={attachment.url.toString()}>
-                                        {attachment.name.toString()}
+                                    <Link className="text-xs line-clamp-1 link" href={attachment.url?.toString()}>
+                                        {attachment.name?.toString()}
                                     </Link>
                                     {DeletingId === attachment.id.toString() && (
                                         <div>

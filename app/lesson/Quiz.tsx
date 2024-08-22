@@ -1,6 +1,5 @@
 "use client"
 
-import { challengeOptions, challenges, lessons, userSubcription } from "@/db/schema";
 import { useState, useTransition } from "react";
 import { Header } from "./header";
 import { ChallengeOptionType } from "./ChallengeOptions";
@@ -16,15 +15,16 @@ import Confetti from "react-confetti"
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import Link from "next/link";
+import { challenge_options, challenges, user_subscription } from "@prisma/client";
 type Props = {
     lsnId: number;
-    lsnChallenges: (typeof challenges.$inferSelect & {
+    lsnChallenges: (challenges & {
         completed: boolean;
-        challengeOptions: typeof challengeOptions.$inferSelect[]
+        challengeOptions: challenge_options[]
     })[]
     hearts: number;
     percent: number;
-    userSubbed: typeof userSubcription.$inferSelect & {
+    userSubbed: user_subscription & {
         isActive: boolean
     } | null ;
 }

@@ -1,6 +1,4 @@
-import db from "@/db/drizzle"
-import { getUserSubscription } from "@/db/queries"
-import { userProgress } from "@/db/schema"
+import { getUserSubscription } from "@/lib/queries"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 

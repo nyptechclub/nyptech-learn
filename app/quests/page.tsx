@@ -1,7 +1,7 @@
 import Promo from "@/components/general/promo";
 import { Progress } from "@/components/ui/progress";
 import { quests } from "@/constants";
-import { getUserProgress, getUserSubscription } from "@/db/queries";
+import { getUserProgress, getUserSubscription } from "@/lib/queries";
 import { Sword } from "lucide-react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -12,7 +12,7 @@ const QuestPage = async () => {
     const [userProgress, userSubcription] = await Promise.all([
         userProgressData, useSubcriptionData,
     ])
-    if (!userProgress || !userProgress.activeCourse) {
+    if (!userProgress || !userProgress.active_course_id) {
         redirect("/courses")
     }
     const isPro = !!userSubcription?.isActive

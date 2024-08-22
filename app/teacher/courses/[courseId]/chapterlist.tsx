@@ -1,13 +1,13 @@
 "use client"
 
-import { chapters } from "@/db/schema";
 import { useEffect, useState } from "react";
 import {DragDropContext, Draggable, DropResult, Droppable} from "@hello-pangea/dnd"
 import { cn } from "@/lib/utils";
 import { Grid, Grip, Pencil } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { chapters } from "@prisma/client";
 interface Props{
-    items: typeof chapters[];
+    items: chapters[];
     onReorder: (updateData:{
         id: string;
         position: number
@@ -59,10 +59,10 @@ onEdit
                                     {...provided.dragHandleProps}>
                                         <Grip/>
                                     </div>
-                                    {chapter.title.toString()}
+                                    {chapter.title?.toString()}
                                     <div className="ml-auto pr-2 flex items-center gap-x-2">
                                     <Badge>
-                                    {chapter.isPublished ? "Published": "Draft"}
+                                    {chapter.is_published ? "Published": "Draft"}
                                     </Badge>
                                     <Pencil onClick={()=> onEdit(chapter.id.toString())} className="w-4 h-4 cursor-pointer transition"/>
                                     </div>

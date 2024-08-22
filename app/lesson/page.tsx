@@ -1,33 +1,37 @@
-import { getUserProgress, getUserSubscription, getlesson } from "@/db/queries";
-import { challenges } from "@/db/schema";
+import { getUserProgress, getUserSubscription, getLesson } from "@/lib/queries";
 import { redirect } from "next/navigation";
 import { Quiz } from "./Quiz";
 
-const LessonPage = async() => {
-    const lessonData = getlesson()
-    const userProgress = getUserProgress()
-    const usersubData = getUserSubscription()
-    const [
-        lesson,
-        progress,
-        subbed
-    ] = await Promise.all([
-        lessonData, userProgress, usersubData
-
-    ])
-    if (!lesson || !progress){
-        redirect("/learn")
+const LessonPage = async () => {
+    const lessonData = getLesson();
+    const userProgress = getUserProgress();
+    const usersubData = getUserSubscription();
+    
+    const [lesson, progress, subbed] = await Promise.all([
+        lessonData, userProgress, usersubData,
+    ]);
+    
+    if (!lesson || !progress) {
+        redirect("/learn");
     }
-    const initalPecent = lesson.challenges.filter((challenges) => challenges.completed).length / lesson.challenges.length * 100
-    return ( 
-<Quiz
-lsnChallenges={lesson.challenges}
-lsnId={lesson.id}
-hearts={progress.hearts}
-percent={initalPecent}
-userSubbed={subbed}
-/>
-     );
-}
- 
+
+    // Map the data to match the expected type structure
+    const mappedChallenges = lesson.challenges.map((challenge) => ({
+        ...challenge,
+        challengeOptions: challenge.challenge_options,
+    }));
+
+    const initialPercent = (lesson.challenges.filter((ch) => ch.completed).length / lesson.challenges.length) * 100;
+    
+    return (
+        <Quiz
+            lsnChallenges={mappedChallenges}
+            lsnId={lesson.id}
+            hearts={progress.hearts}
+            percent={initialPercent}
+            userSubbed={subbed}
+        />
+    );
+};
+
 export default LessonPage;

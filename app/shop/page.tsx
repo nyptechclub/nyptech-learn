@@ -1,4 +1,4 @@
-import { getUserProgress, getUserSubscription } from "@/db/queries";
+import { getUserProgress, getUserSubscription } from "@/lib/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Items } from "./items";
@@ -9,7 +9,7 @@ const ShopPage = async () => {
     const [userProgress, userSubcription] = await Promise.all([
         userProgressData, useSubcriptionData
     ])
-    if (!userProgress || !userProgress.activeCourse) {
+    if (!userProgress || !userProgress.active_course_id) {
         redirect("/courses")
     }
     const isPro = !!userSubcription?.isActive

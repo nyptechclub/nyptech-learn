@@ -1,14 +1,14 @@
-import { challengeOptions, challenges } from "@/db/schema"
 import { cn } from "@/lib/utils"
 import { Card } from "./Card"
+import { challenge_options, challenges } from "@prisma/client"
 
 type Props = {
- options: typeof challengeOptions.$inferSelect[]
+ options: challenge_options[]
  onSelect: (id: number) => void
  status:"correct" | "wrong" | "none"
  selectedOption?: number 
  disabled?: boolean
- type: typeof challenges.$inferSelect["type"]
+ type: challenges["type"]
 
 }
 export const ChallengeOptionType = ({options, onSelect, selectedOption, type, status, disabled}: Props) => {
@@ -19,12 +19,12 @@ export const ChallengeOptionType = ({options, onSelect, selectedOption, type, st
                 key={option.id}
                 id={option.id}
                 text={option.text}
-                imageSrc={option.imageSrc}
+                imageSrc={option.image_src}
                 shortcut={`${i + 1}`}
                 selected={selectedOption === option.id}
                 onClick={()=> onSelect(option.id)}
                 status={status}
-                audioSrc={option.audioSrc}
+                audioSrc={option.audio_src}
                 disabled={disabled}
                 type={type}
                 />

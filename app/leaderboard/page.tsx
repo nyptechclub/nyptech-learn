@@ -1,4 +1,4 @@
-import { getTopTenUsers, getUserProgress, getUserSubscription } from "@/db/queries";
+import { getTopTenUsers, getUserProgress, getUserSubscription } from "@/lib/queries";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -9,7 +9,7 @@ const LeaderboardPage = async () => {
     const [userProgress, userSubcription, leaderboard] = await Promise.all([
         userProgressData, useSubcriptionData, top50UserData
     ])
-    if (!userProgress || !userProgress.activeCourse) {
+    if (!userProgress || !userProgress.active_course_id) {
         redirect("/courses")
     }
     const isPro = !!userSubcription?.isActive
@@ -31,16 +31,16 @@ const LeaderboardPage = async () => {
             <div className="divider"></div> 
             {leaderboard.map((userProgress, index)=>{
                 return(
-                    <div key={userProgress.userId}
+                    <div key={userProgress.user_id}
                     className="btn btn-outline flex flex-row btn-lg">
                     <div>{index + 1}.
                     </div>
                     <div>
-                    {userProgress.userName}
+                    {userProgress.user_name}
                     </div>
                     <div className="avatar">
                     <div className="w-10 rounded-full">
-                    <img src={userProgress.userImageSrc} />
+                    <img src={userProgress.user_image_src} />
                     </div>
                     </div>
                     <div>

@@ -1,5 +1,5 @@
 import { Input } from "./gg"; 
-import { getUserProgress } from "@/db/queries";
+import { getUserProgress } from "@/lib/queries";
 const ChatPage = async() => {
     const stream = await getUserProgress()
 
@@ -11,7 +11,7 @@ const ChatPage = async() => {
                 <div>
                     Every good wizard needs a bit of style!
                 </div>
-                {stream?.userId === null || stream?.userId === undefined ? (
+                {stream?.user_id === null || stream?.user_id === undefined ? (
                     <div className="justify-center">Theme not found</div>
                 ) : (
                 <div className="form-control">

@@ -1,7 +1,7 @@
 "use client";
 import { toast } from "sonner";
 import { useState, useTransition } from "react";
-import { updatetheme } from "@/actions/user-progress";
+import { updateTheme } from "@/actions/user-progress";
 
 interface ToggleCardProps {
   string: string;
@@ -53,7 +53,7 @@ export const Input = ({ string }: ToggleCardProps) => {
   
     const onSaveClick = async () => {
       startTransition(() => {
-        updatetheme(inputValue)
+        updateTheme(inputValue)
           .then(() => toast.success("Theme updated!"))
           .catch(() => toast.error("Something Went Wrong (Settings)"));
       });
