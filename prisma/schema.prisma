@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model attachments {
+  id         String    @id @default(cuid())
+  name       String?
+  url        String?
+  course_id  String?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  cCourses   cCourses? @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "attachments_course_id_cCourses_id_fk")
+}
+
+model cCourses {
+  id           String        @id @default(cuid())
+  title        String?
+  imageSrc     String?
+  description  String?
+  is_published Boolean?      @default(false)
+  category_id  String?
+  created_at   DateTime?     @default(now()) @db.Timestamp(6)
+  userId       String?
+  attachments  attachments[]
+  categories   categories?   @relation(fields: [category_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "cCourses_category_id_categories_id_fk")
+  chapters     chapters[]
+}
+
+model categories {
+  id       String     @id @default(cuid())
+  name     String     @unique(map: "categories_name_unique")
+  cCourses cCourses[]
+}
+
+model challenge_options {
+  id           Int        @id @default(autoincrement())
+  challenge_id Int
+  text         String
+  correct      Boolean
+  image_src    String?
+  audio_src    String?
+  challenges   challenges @relation(fields: [challenge_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "challenge_options_challenge_id_challenges_id_fk")
+}
+
+model challenge_progress {
+  id           Int        @id @default(autoincrement())
+  user_id      String
+  challenge_id Int
+  completed    Boolean    @default(false)
+  challenges   challenges @relation(fields: [challenge_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "challenge_progress_challenge_id_challenges_id_fk")
+}
+
+model challenges {
+  id                 Int                  @id @default(autoincrement())
+  lesson_id          Int
+  type               type
+  question           String
+  order              Int
+  lesson             String?
+  challenge_options  challenge_options[]
+  challenge_progress challenge_progress[]
+  lessons            lessons              @relation(fields: [lesson_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "challenges_lesson_id_lessons_id_fk")
+}
+
+model chapters {
+  id           String    @id @default(cuid())
+  title        String?
+  description  String?
+  video_url    String?
+  position     Int
+  is_published Boolean?  @default(false)
+  course_id    String?
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+  cCourses     cCourses? @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "chapters_course_id_cCourses_id_fk")
+}
+
+model courses {
+  id            Int             @id @default(autoincrement())
+  title         String
+  image_src     String
+  units         units[]
+  user_progress user_progress[]
+}
+
+model cuser_progress {
+  id           String    @id @default(cuid())
+  user_id      String?   @unique(map: "cuser_progress_user_id_unique")
+  chapter_id   String?   @unique(map: "cuser_progress_chapter_id_unique")
+  is_completed Boolean?  @default(false)
+  created_at   DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model lessons {
+  id         Int          @id @default(autoincrement())
+  title      String
+  unit_id    Int
+  order      Int
+  challenges challenges[]
+  units      units        @relation(fields: [unit_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "lessons_unit_id_units_id_fk")
+}
+
+model units {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  course_id   Int
+  order       Int
+  lessons     lessons[]
+  courses     courses   @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "units_course_id_courses_id_fk")
+}
+
+model user_progress {
+  user_id          String   @id
+  user_name        String   @default("User")
+  user_image_src   String   @default("/mascot.svg")
+  active_course_id Int?
+  hearts           Int      @default(5)
+  points           Int      @default(0)
+  maxhearts        Int      @default(5)
+  theme            String   @default("cupcake")
+  courses          courses? @relation(fields: [active_course_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "user_progress_active_course_id_courses_id_fk")
+}
+
+model user_subscription {
+  id                     Int      @id @default(autoincrement())
+  user_Id                String   @unique(map: "user_subscription_user_Id_unique")
+  stripe_customer_id     String   @unique(map: "user_subscription_stripe_customer_id_unique")
+  stripe_subscription_id String   @unique(map: "user_subscription_stripe_subscription_id_unique")
+  stripe_price_id        String   @unique(map: "user_subscription_stripe_price_id_unique")
+  stripe_end             DateTime @db.Timestamp(6)
+}
+
+enum type {
+  SELECT
+  ASSIST
+}

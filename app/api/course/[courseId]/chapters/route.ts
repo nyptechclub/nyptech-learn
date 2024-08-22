@@ -1,13 +1,11 @@
-import db from "@/db/drizzle";
-import { chapters } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { createId } from '@paralleldrive/cuid2';
+import { db } from "@/lib/db";
 
 export async function POST(
-    req: Request,
-    { params }: { params: { courseId: string } }
+  req: Request,
+  { params }: { params: { courseId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -17,9 +15,13 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const lastChapter = await db.query.chapters.findFirst({
-      where: eq(chapters.courseId, params.courseId),
-      orderBy: (chapters, { desc }) => [desc(chapters.position)],
+    const lastChapter = await db.chapters.findFirst({
+      where: {
+        course_id: params.courseId,
+      },
+      orderBy: {
+        position: 'desc',
+      },
     });
 
     const newPosition = lastChapter ? lastChapter.position + 1 : 1;
@@ -28,21 +30,22 @@ export async function POST(
     const newId = createId();
 
     try {
-      const newChapter = await db.insert(chapters).values({
-        id: newId,
-        title,
-        courseId: params.courseId,
-        position: newPosition,
+      const newChapter = await db.chapters.create({
+        data: {
+          id: newId,
+          title,
+          course_id: params.courseId,
+          position: newPosition,
+        },
       });
 
       return NextResponse.json(newChapter);
     } catch (insertError) {
       console.error("Insert Error: ", insertError);
-      if (insertError instanceof Error && insertError.message.includes('duplicate key value violates unique constraint')) {
+      if (insertError instanceof Error && insertError.message.includes('Unique constraint failed')) {
         return new NextResponse("Duplicate key error", { status: 409 });
       }
       throw insertError;
-      // Rethrow if it's a different error
     }
   } catch (error) {
     console.error("[Chapters]", error);

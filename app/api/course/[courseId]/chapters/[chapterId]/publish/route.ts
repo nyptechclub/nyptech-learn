@@ -1,44 +1,40 @@
-import db from "@/db/drizzle";
-import { chapters } from "@/db/schema";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
-    req: Request,
-    { params }: { params: { courseId: string; chapterId: string } }
-  ) {
-    try {
-      const { userId } = auth();
-      if (!userId) {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-      const chapter = await db.query.chapters.findFirst({
-        where: and(
-          eq(chapters.id, params.chapterId),
-          eq(chapters.courseId, params.courseId)
-        )
-      });
-      
+  req: Request,
+  { params }: { params: { courseId: string; chapterId: string } }
+) {
+  try {
+    const { userId } = auth();
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
 
-    if (!chapter || !chapter.title || !chapter.description || !chapter.videoUrl) {
+    const chapter = await db.chapters.findFirst({
+      where: {
+        id: params.chapterId,
+        course_id: params.courseId,
+      },
+    });
+
+    if (!chapter || !chapter.title || !chapter.description || !chapter.video_url) {
       return new NextResponse("Missing Fields", { status: 401 });
     }
-    const published = await db.update(chapters)
-    .set({ isPublished: true })
-    .where(
-      and(
-        eq(chapters.id, params.chapterId),
-        eq(chapters.courseId, params.courseId)
-      )
-    )
-    .returning()
-    .then(res => res[0]);
-      return NextResponse.json(published)
-    
-    } catch (error) {
-        console.log("/api/chapter-published", error);
-        return new NextResponse("Cannot edit chapter", { status: 500 });
-      }
-    }
-    
+
+    const published = await db.chapters.update({
+      where: {
+        id: params.chapterId,
+      },
+      data: {
+        is_published: true,
+      },
+    });
+
+    return NextResponse.json(published);
+  } catch (error) {
+    console.error("/api/chapter-published", error);
+    return new NextResponse("Cannot edit chapter", { status: 500 });
+  }
+}

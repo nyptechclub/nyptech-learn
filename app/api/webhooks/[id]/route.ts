@@ -1,13 +1,26 @@
-import db from "@/db/drizzle"
-import { userProgress } from "@/db/schema"
-import { eq } from "drizzle-orm"
-import { NextResponse } from "next/server"
+import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
-export const GET = async(
-    req: Request, {params}: {params:{id: string}}
-) =>{
-    const data = await db.query.userProgress.findFirst({
-        where: eq(userProgress.userId, params.id),
-    })
-    return NextResponse.json(data)
-}
+export const GET = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
+  try {
+    const data = await db.user_progress.findFirst({
+      where: { user_id: params.id },
+    });
+
+    return NextResponse.json(data);
+  } catch (error) {
+    console.error("Failed to fetch user progress:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+};

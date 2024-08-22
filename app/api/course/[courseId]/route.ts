@@ -1,8 +1,8 @@
-import db from "@/db/drizzle";
-import { cCourses } from "@/db/schema";
+import { PrismaClient } from "@prisma/client";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+
+const prisma = new PrismaClient();
 
 export async function PATCH(
     req: Request,
@@ -17,10 +17,10 @@ export async function PATCH(
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
-        const updatedCourse = await db.update(cCourses)
-            .set(values)
-            .where(eq(cCourses.id, courseId))
-            .returning();
+        const updatedCourse = await prisma.cCourses.update({
+            where: { id: courseId },
+            data: values,
+        });
 
         return new NextResponse(JSON.stringify(updatedCourse), { status: 200 });
     } catch (error) {
@@ -28,29 +28,32 @@ export async function PATCH(
         return new NextResponse("Internal API error", { status: 500 });
     }
 }
+
 export async function DELETE(
     req: Request,
-    { params }: { params: { courseId: string; } }
-  ) {
+    { params }: { params: { courseId: string } }
+) {
     try {
-      const { userId } = auth();
-      if (!userId) {
-        return new NextResponse("Unauthorized", { status: 401 });
-      }
-      const chapter = await db.query.cCourses.findFirst({
-        where: and(
-          eq(cCourses.id, params.courseId)
-        ),
-      });
-      if (!chapter) {
-        return new NextResponse("Not Found", { status: 404 });
-      }
-      const deleted = await db
-        .delete(cCourses)
-        .where(eq(cCourses.id, params.courseId));
-      return NextResponse.json(deleted);
+        const { userId } = auth();
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const course = await prisma.cCourses.findUnique({
+            where: { id: params.courseId },
+        });
+
+        if (!course) {
+            return new NextResponse("Not Found", { status: 404 });
+        }
+
+        const deletedCourse = await prisma.cCourses.delete({
+            where: { id: params.courseId },
+        });
+
+        return NextResponse.json(deletedCourse);
     } catch (error) {
-      console.log("/api/course-delete", error);
-      return new NextResponse("Cannot edit chapter", { status: 500 });
+        console.log("/api/course-delete", error);
+        return new NextResponse("Cannot delete course", { status: 500 });
     }
-  }
+}

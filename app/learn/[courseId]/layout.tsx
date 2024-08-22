@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import db from "@/db/drizzle";
-import { cCourses, categories, chapters } from "@/db/schema";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq, asc } from "drizzle-orm"; // Import asc function
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -27,28 +25,28 @@ const CourseLayout = async ({ children, params }: Props) => {
     return redirect("/courses");
   }
 
-  const course = await db.query.cCourses.findFirst({
-    where: eq(cCourses.id, courseId),
+  const course = await db.cCourses.findUnique({
+    where: { id: courseId },
   });
 
   if (!course) {
     return redirect("/courses");
   }
 
-  const categoryId = course.categoryId;
+  const categoryId = course.category_id;
 
   if (!categoryId) {
     return redirect("/courses");
   }
 
-  const category = await db.query.categories.findFirst({
-    where: eq(categories.id, categoryId),
+  const category = await db.categories.findUnique({
+    where: { id: categoryId },
   });
 
   // Fetch and sort chapters by position
-  const chapter = await db.query.chapters.findMany({
-    where: eq(chapters.courseId, course.id),
-    orderBy: asc(chapters.position), // Use asc function
+  const chapters = await db.chapters.findMany({
+    where: { course_id: course.id },
+    orderBy: { position: 'asc' },
   });
 
   return (
@@ -56,7 +54,7 @@ const CourseLayout = async ({ children, params }: Props) => {
       <div className="menu rounded-box flex-col flex p-5 bg-base-200 menu-horizontal">
         <h1 className="text-xl font-bold p-5">{course.title}</h1>
         <div className="gap-5 flex w-56 flex-col">
-          {chapter.map((item: any) => (
+          {chapters.map((item) => (
             <Link
               key={item.id}
               href={`/learn/${courseId}/${item.id}`}

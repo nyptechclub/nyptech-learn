@@ -1,6 +1,4 @@
-import db from "@/db/drizzle";
-import { chapters } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { db } from "@/lib/db";
 import ChapterContent from "./button-disable";
 
 type Props = {
@@ -10,8 +8,11 @@ type Props = {
 };
 
 const Chapterpage = async ({ params }: Props) => {
-  const chapter = await db.query.chapters.findFirst({
-    where: and(eq(chapters.id, params.chapterId), eq(chapters.isPublished, true)),
+  const chapter = await db.chapters.findFirst({
+    where: {
+      id: params.chapterId,
+      is_published: true,
+    },
   });
 
   if (!chapter) {

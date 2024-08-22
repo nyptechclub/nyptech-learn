@@ -1,7 +1,5 @@
-import db from "@/db/drizzle";
-import { attachments, cCourses, categories } from "@/db/schema";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -17,26 +15,26 @@ const Learningpage = async ({ params }: Props) => {
         return redirect("/");
     }
 
-    const course = await db.query.cCourses.findFirst({
-        where: eq(cCourses.id, params.courseId)
+    const course = await db.cCourses.findUnique({
+        where: { id: params.courseId },
     });
 
     if (!course) {
         return redirect("/courses");
     }
 
-    const categoryId = course.categoryId;
+    const categoryId = course.category_id;
 
     if (!categoryId) {
         return redirect("/courses");
     }
 
-    const category = await db.query.categories.findFirst({
-        where: eq(categories.id, categoryId)
+    const category = await db.categories.findUnique({
+        where: { id: categoryId },
     });
 
-    const attachmentsList = await db.query.attachments.findMany({
-        where: eq(attachments.courseId, params.courseId)
+    const attachmentsList = await db.attachments.findMany({
+        where: { course_id: params.courseId },
     });
 
     return (
@@ -48,7 +46,7 @@ const Learningpage = async ({ params }: Props) => {
             <div>{course.description}</div>
             <h3 className="font-bold">Attachments:</h3>
             <div>
-                {attachmentsList.map((attachment: any) => (
+                {attachmentsList.map((attachment) => (
                     <Link href={attachment.url} key={attachment.id} className="btn-link btn">
                         {attachment.name}
                     </Link>

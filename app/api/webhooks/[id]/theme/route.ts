@@ -1,27 +1,29 @@
-import db from "@/db/drizzle"
-import { userProgress } from "@/db/schema"
-import { eq } from "drizzle-orm"
-import { NextResponse } from "next/server"
+import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 export const GET = async (
-  req: Request, { params }: { params: { id: string } }
+  req: Request,
+  { params }: { params: { id: string } }
 ) => {
   try {
-    const fullData = await db.query.userProgress.findFirst({
-      where: eq(userProgress.userId, params.id),
+    const fullData = await db.user_progress.findFirst({
+      where: { user_id: params.id },
+      select: { theme: true }, // Select only the 'theme' field
     });
 
-    // Manually select only the points field to return
     const data = fullData ? fullData.theme : null;
 
-    return NextResponse.json(data)
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Failed to fetch user progress:', error)
-    return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json',
+    console.error("Failed to fetch user progress:", error);
+    return new Response(
+      JSON.stringify({ error: "Internal Server Error" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    })
+    );
   }
-}
+};

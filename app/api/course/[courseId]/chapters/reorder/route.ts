@@ -1,29 +1,34 @@
-import db from "@/db/drizzle";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { chapters } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 export async function PUT(
-    req: Request,
-    { params }: { params: { courseId: string } }
+  req: Request,
+  { params }: { params: { courseId: string } }
 ) {
-    try {
-        const { userId } = auth();
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
-        const { list } = await req.json();
-        for (let item of list) {
-            await db.update(chapters)
-                .set({ position: item.position })
-                .where(eq(chapters.id, item.id));
-        }
-
-        return new NextResponse("Success", { status: 200 });
-    } catch (error) {
-        console.log("Reorder Error", error);
-        return new NextResponse("Reorder Error", { status: 500 });
+  try {
+    const { userId } = auth();
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
     }
+
+    const { list } = await req.json();
+
+    // Update positions for each chapter in the list
+    for (let item of list) {
+      await db.chapters.update({
+        where: {
+          id: item.id,
+        },
+        data: {
+          position: item.position,
+        },
+      });
+    }
+
+    return new NextResponse("Success", { status: 200 });
+  } catch (error) {
+    console.log("Reorder Error", error);
+    return new NextResponse("Reorder Error", { status: 500 });
+  }
 }

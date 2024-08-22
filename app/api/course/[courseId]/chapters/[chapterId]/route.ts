@@ -1,8 +1,6 @@
-import db from "@/db/drizzle";
+import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { cCourses, chapters } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
 
 export async function DELETE(
   req: Request,
@@ -13,37 +11,46 @@ export async function DELETE(
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    const chapter = await db.query.chapters.findFirst({
-      where: and(
-        eq(chapters.id, params.chapterId),
-        eq(chapters.courseId, params.courseId)
-      ),
+
+    const chapter = await db.chapters.findFirst({
+      where: {
+        id: params.chapterId,
+        course_id: params.courseId,
+      },
     });
+
     if (!chapter) {
       return new NextResponse("Not Found", { status: 404 });
     }
 
-    const deleted = await db
-      .delete(chapters)
-      .where(eq(chapters.id, params.chapterId));
-    const published = await db.query.chapters.findMany({
-      where: and(
-        eq(chapters.id, params.chapterId),
-        eq(chapters.isPublished, true)
-      ),
+    await db.chapters.delete({
+      where: {
+        id: params.chapterId,
+      },
     });
-    if (!published.length) {
-      const updatedCourse = await db
-        .update(cCourses)
-        .set({ isPublished: false })
-        .where(eq(cCourses.id, params.courseId))
-        .returning()
-        .then((res) => res[0]);
+
+    const publishedChapters = await db.chapters.findMany({
+      where: {
+        course_id: params.courseId,
+        is_published: true,
+      },
+    });
+
+    if (publishedChapters.length === 0) {
+      await db.cCourses.update({
+        where: {
+          id: params.courseId,
+        },
+        data: {
+          is_published: false,
+        },
+      });
     }
-    return NextResponse.json(deleted);
+
+    return new NextResponse("Chapter deleted successfully", { status: 200 });
   } catch (error) {
-    console.log("/api/chapterdelete", error);
-    return new NextResponse("Cannot edit chapter", { status: 500 });
+    console.error("/api/chapterdelete", error);
+    return new NextResponse("Cannot delete chapter", { status: 500 });
   }
 }
 export async function PATCH(
@@ -58,26 +65,21 @@ export async function PATCH(
 
     const { isPublished, ...values } = await req.json();
 
-    const chapter = await db
-      .update(chapters)
-      .set(values)
-      .where(
-        and(
-          eq(chapters.id, params.chapterId),
-          eq(chapters.courseId, params.courseId)
-        )
-      )
-      .returning()
-      .then((res) => res[0]);
+    const chapter = await db.chapters.update({
+      where: {
+        id: params.chapterId,
+        course_id: params.courseId,
+      },
+      data: values,
+    });
 
     if (!chapter) {
       return new NextResponse("Chapter not found", { status: 404 });
     }
 
-
     return new NextResponse("Chapter updated successfully", { status: 200 });
   } catch (error) {
-    console.log("/api/chaptertitle", error);
+    console.error("/api/chaptertitle", error);
     return new NextResponse("Cannot edit chapter", { status: 500 });
   }
 }
