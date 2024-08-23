@@ -138,3 +138,14 @@ enum type {
   SELECT
   ASSIST
 }
+
+model Feedback {
+  id       String   @id @default(cuid())
+  userId   String
+  username String
+  roomname String
+  text     String
+  createdAt DateTime @default(now())
+}
+
+
