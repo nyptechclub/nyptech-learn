@@ -148,4 +148,11 @@ model Feedback {
   createdAt DateTime @default(now())
 }
 
-
+model Link {
+  id       String   @id @default(cuid())
+  userId   String
+  username String
+  roomname String
+  text     String
+  createdAt DateTime @default(now())
+}
