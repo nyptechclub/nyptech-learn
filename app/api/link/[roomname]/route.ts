@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
@@ -20,29 +21,34 @@ export const GET = async (req: NextRequest, { params }: { params: { roomname: st
   };
   
 
-export const POST = async (req: NextRequest, { params }: { params: { roomname: string } }) => {
-const {userId} = auth()
-if(!userId){
-    return notFound()
-}
-  const { roomname } = params;
-  const body = await req.json();
-  const user = await currentUser()
-  if (!body.text || !body.userId) {
-    return new NextResponse("Missing text or userId", { status: 400 });
-  }
-
-  const username = user?.username || user?.firstName ||"Anonymous";
-
-  // Store the feedback in the database
-  const newFeedback = await db.link.create({
-    data: {
-      roomname,
-      userId: userId,
-      text: body.text,
-      username,
-    },
-  });
-
-  return NextResponse.json(newFeedback);
-};
+  export const POST = async (req: NextRequest, { params }: { params: { roomname: string } }) => {
+    const { userId } = auth();
+  
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+  
+    const { roomname } = params;
+    const body = await req.json();
+  
+    if (!body.text || !body.filename) {  // Corrected to 'filename'
+      return new NextResponse("Missing text or filename", { status: 400 });
+    }
+  
+    const user = await currentUser();
+    const username = user?.username || user?.firstName + " " + user?.lastName || "Anonymous";
+  
+    // Store the file information in the database
+    const newLink = await db.link.create({
+      data: {
+        roomname,
+        userId: userId,
+        text: body.text,
+        username,
+        filename: body.filename,
+      },
+    });
+    revalidatePath(`/link/${roomname}`)
+    revalidatePath(`/link/${roomname}/admin`)
+    return NextResponse.json(newLink);
+  };

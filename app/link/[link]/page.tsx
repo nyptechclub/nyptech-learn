@@ -1,62 +1,63 @@
-"use client";
+import { db } from "@/lib/db";
+import { auth } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
+import Upload from "./Upload";
+import Link from "next/link";
 
-import { UploadButton } from "@/lib/uploadthing";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-interface Props{
-  params:{
-    link: string
-  }
-}
-const RoomPage = ({params}: Props) => {
-  const [text, setText] = useState("");
-  const router = useRouter();
-
-  const handleUploadComplete = async (url: string) => {
-    if (!url) {
-      alert("Upload failed. Please try again.");
-      return;
-    }
-    const roomname =  params.link
-    try {
-      const response = await fetch(`/api/link/${roomname}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: url }), 
-      });
-
-      if (response.ok) {
-        setText(""); // Clear the state
-        router.refresh(); // Refresh the page
-      } else {
-        alert("Failed to submit feedback. Please try again.");
-      }
-    } catch (error) {
-      toast.error("Unable to upload")
-    }
+interface Props {
+  params: {
+    link: string;
   };
+}
+
+const Page = async ({ params }: Props) => {
+  const { userId } = auth();
+  if (!userId) {
+    return notFound();
+  }
+
+  // Fetch the user's files and order them by createdAt
+  const files = await db.link.findMany({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      createdAt: 'asc',
+    },
+  });
+
+  // Group files by roomname
+  const groupedFiles = files.reduce((acc, file) => {
+    if (!acc[file.roomname]) {
+      acc[file.roomname] = [];
+    }
+    acc[file.roomname].push(file);
+    return acc;
+  }, {} as Record<string, typeof files>);
 
   return (
     <div>
-      <p>
-        </p>{params.link}
- <UploadButton
-      endpoint="courseAttachment"
-      onClientUploadComplete={(res) => {
-        const uploadedUrl = res?.[0].url;
-        setText(uploadedUrl);
-        handleUploadComplete(uploadedUrl);
-      }}
-      onUploadError={(error: Error) => {
-        alert(`ERROR! ${error.message}`);
-      }}
-    />
+      <Upload link={params.link} />
+      <div className="m-5 p-5 mx-auto">
+      <h1 className="font-bold text-xl">Past Uploaded Files:</h1>
+      <div>
+        {Object.keys(groupedFiles).map((roomname) => (
+          <div key={roomname} >
+            <h2 className="font-semibold text-lg">Link Name:{roomname}</h2>
+            {groupedFiles[roomname].map((file) => (
+              <Link key={file.id} href={file.text} className="btn btn-link">
+                <div>
+                  {file.filename} - {new Date(file.createdAt).toLocaleString()}
+                </div>
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+      </div>
+      
     </div>
-   
   );
 };
 
-export default RoomPage;
+export default Page;

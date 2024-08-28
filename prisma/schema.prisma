@@ -154,5 +154,6 @@ model Link {
   username String
   roomname String
   text     String
+  filename String
   createdAt DateTime @default(now())
 }
