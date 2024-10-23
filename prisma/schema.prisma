@@ -139,13 +139,16 @@ enum type {
   ASSIST
 }
 
-model notes {
-  id     String @id @default(cuid())
-  url    String
-  userid String
-  school String
-  course String
+model Notes {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String   // This is where we'll store the file link
+  school    String
+  course    String
+  createdAt DateTime @default(now())
+  userId    String   // This relates to the user uploading the file
 }
+
 
 model personal_notes{
   id  String @id @default(cuid())
