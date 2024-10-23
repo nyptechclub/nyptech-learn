@@ -139,3 +139,16 @@ enum type {
   ASSIST
 }
 
+model notes {
+  id     String @id @default(cuid())
+  url    String
+  userid String
+  school String
+  course String
+}
+
+model personal_notes{
+  id  String @id @default(cuid())
+  userid  String
+  description String
+}
