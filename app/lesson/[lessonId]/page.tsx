@@ -4,17 +4,25 @@ import { Quiz } from "../Quiz";
 
 type Props = {
     params: {
-        lessonId: number;
+        lessonId: string; // Updated to string since route params are strings by default
     };
 };
 
 const LessonIDPage = async ({ params }: Props) => {
-    const lessonData = getLesson(params.lessonId);
+    const lessonId = Number(params.lessonId); // Convert to a number
+
+    if (isNaN(lessonId)) {
+        redirect("/learn"); // Redirect if the conversion fails
+    }
+
+    const lessonData = getLesson(lessonId);
     const userProgress = getUserProgress();
     const subbedData = getUserSubscription();
 
     const [lesson, progress, subbed] = await Promise.all([
-        lessonData, userProgress, subbedData,
+        lessonData,
+        userProgress,
+        subbedData,
     ]);
 
     if (!lesson || !progress) {
